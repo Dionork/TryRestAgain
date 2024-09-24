@@ -34,4 +34,13 @@ public class ConnectionManagerImpl implements ConnectionManager {
 
         return connection;
     }
+
+    @Override
+    public void closeConnection() {
+        try {
+            getConnection().close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,17 +1,17 @@
 package ru.course.aston;
 
-import ru.course.aston.db.ConnectionManager;
-import ru.course.aston.db.ConnectionManagerImpl;
 
-import java.sql.SQLException;
+import ru.course.aston.model.Role;
+import ru.course.aston.repository.FractionRepository;
+import ru.course.aston.repository.RoleRepository;
+import ru.course.aston.repository.impl.FractionRepositoryImpl;
+import ru.course.aston.repository.impl.RoleRepositoryImpl;
 
 public class Main {
     public static void main(String[] args) {
-        ConnectionManager connectionManager = new ConnectionManagerImpl();
-        try {
-            connectionManager.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        FractionRepository fractionRepository = new FractionRepositoryImpl();
+        System.out.println(fractionRepository.findById(1L).toString());
+        // fractionRepository.findAll().forEach(System.out::println);
+
     }
 }

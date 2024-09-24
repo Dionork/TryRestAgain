@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS wow_db.fractions CASCADE;
 DROP TABLE IF EXISTS wow_db.hero_fractions CASCADE;
 DROP TABLE IF EXISTS wow_db.maxHP CASCADE;
 
+
 CREATE TABLE IF NOT EXISTS wow_db.roles
 (role_name_id  bigserial PRIMARY KEY,
 role_name VARCHAR(255) NOT NULL UNIQUE);
