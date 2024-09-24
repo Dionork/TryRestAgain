@@ -1,12 +1,22 @@
 package ru.course.aston.servlet.dto;
 
 public class HeroToFractionDTO {
+    private Long heroToFractionId;
     private Long heroId;
     private Long fractionId;
 
-    public HeroToFractionDTO(Long heroId, Long fractionId) {
+    public HeroToFractionDTO(Long heroToFractionId, Long heroId, Long fractionId) {
+        this.heroToFractionId = heroToFractionId;
         this.heroId = heroId;
         this.fractionId = fractionId;
+    }
+
+    public Long getHeroToFractionId() {
+        return heroToFractionId;
+    }
+
+    public void setHeroToFractionId(Long heroToFractionId) {
+        this.heroToFractionId = heroToFractionId;
     }
 
     public Long getHeroId() {

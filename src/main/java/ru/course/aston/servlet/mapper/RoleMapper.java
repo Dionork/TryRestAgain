@@ -8,6 +8,8 @@ import ru.course.aston.servlet.dto.RoleDTO;
 @Mapper
 public interface RoleMapper {
     RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);
+
     RoleDTO toDto(Role role);
-    Role toEntity(RoleDTO roleDTO);
+
+    Role toModel(RoleDTO roleDTO);
 }

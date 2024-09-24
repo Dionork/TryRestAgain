@@ -1,17 +1,27 @@
 package ru.course.aston.servlet.dto;
 
 public class RoleDTO {
-    private String role;
+    private Long roleNameId;
+    private String roleName;
 
-    public RoleDTO(String role) {
-        this.role = role;
+    public RoleDTO(Long roleNameId, String roleName) {
+        this.roleNameId = roleNameId;
+        this.roleName = roleName;
     }
 
-    public String getRole() {
-        return role;
+    public Long getRoleNameId() {
+        return roleNameId;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoleNameId(Long roleNameId) {
+        this.roleNameId = roleNameId;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

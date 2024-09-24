@@ -1,22 +1,16 @@
 package ru.course.aston.servlet.dto;
 
 public class HeroDTO {
+    private Long heroId;
     private String heroName;
     private String heroLastName;
     private Long roleNameId;
 
-    public HeroDTO(String heroName, String heroLastName, Long roleNameId) {
+    public HeroDTO(Long heroId, String heroName,String heroLastName,Long roleNameId) {
+        this.heroId = heroId;
         this.heroName = heroName;
         this.heroLastName = heroLastName;
         this.roleNameId = roleNameId;
-    }
-
-    public String getHeroName() {
-        return heroName;
-    }
-
-    public void setHeroName(String heroName) {
-        this.heroName = heroName;
     }
 
     public String getHeroLastName() {
@@ -25,6 +19,22 @@ public class HeroDTO {
 
     public void setHeroLastName(String heroLastName) {
         this.heroLastName = heroLastName;
+    }
+
+    public Long getHeroId() {
+        return heroId;
+    }
+
+    public void setHeroId(Long heroId) {
+        this.heroId = heroId;
+    }
+
+    public String getHeroName() {
+        return heroName;
+    }
+
+    public void setHeroName(String heroName) {
+        this.heroName = heroName;
     }
 
     public Long getRoleNameId() {
