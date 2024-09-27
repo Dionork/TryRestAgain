@@ -24,21 +24,11 @@ public class RoleServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 
-    private static String getJsonHeader(HttpServletRequest req) {
+    private static String getJsonHeader(HttpServletRequest req) throws IOException {
         StringBuilder builder = new StringBuilder();
-        BufferedReader reader = null;
-        try {
-            reader = req.getReader();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        BufferedReader reader = req.getReader();
         String line;
-        while (true) {
-            try {
-                if (!((line = reader.readLine()) != null)) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        while ((line = reader.readLine()) != null) {
             builder.append(line);
         }
         return builder.toString();
@@ -72,7 +62,6 @@ public class RoleServlet extends HttpServlet {
     @Override
     //Изменение объекта
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         String respAnswer = "";
         try {
             String[] path = req.getPathInfo().split("/");
@@ -101,12 +90,14 @@ public class RoleServlet extends HttpServlet {
     //Новый объект
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String respAnswer = "";
+        setJsonHeader(resp);
         String json = getJsonHeader(req);
         try {
             String[] path = req.getPathInfo().split("/");
             if ("new".equals(path[1])) {
                 RoleDTO roleDTO = new RoleDTO(1L, req.getParameter("name"));
                 roleService.save(roleDTO); //Сохраняем
+
                 respAnswer = "Создан";
                 resp.setStatus(HttpServletResponse.SC_CREATED); //Успешно
             } else {
