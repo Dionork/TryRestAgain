@@ -16,4 +16,6 @@ public interface RoleRepository extends Repository<Role, Long>{
 
     @Override
     List<Role> findAll();
+
+    void update(Role role);
 }

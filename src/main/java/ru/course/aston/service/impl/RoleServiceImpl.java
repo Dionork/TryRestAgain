@@ -16,6 +16,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO findById(Long id) {
         return RoleMapper.INSTANCE.toDto(roleRepository.findById(id));
+
     }
 
     @Override
@@ -27,6 +28,7 @@ public class RoleServiceImpl implements RoleService {
     public RoleDTO save(RoleDTO roleDTO) {
         Role role = RoleMapper.INSTANCE.toModel(roleDTO);
         return RoleMapper.INSTANCE.toDto(roleRepository.save(role));
+
     }
 
     @Override
@@ -35,8 +37,6 @@ public class RoleServiceImpl implements RoleService {
         List<RoleDTO> roleDTOList = new ArrayList<>();
         for (Role role : roles) {
             RoleDTO roleDTO = RoleMapper.INSTANCE.toDto(role);
-            roleDTO.setRoleNameId(role.getRoleNameId());
-            roleDTO.setRoleName(role.getRoleName());
             roleDTOList.add(roleDTO);
         }
         return roleDTOList;
@@ -45,7 +45,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void update(RoleDTO roleDTO) {
-        Role role = roleRepository.findById(roleDTO.getRoleNameId());
-        roleRepository.save(role);
+        Role role = RoleMapper.INSTANCE.toModel(roleDTO);
+        roleRepository.update(role);
     }
 }

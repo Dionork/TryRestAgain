@@ -1,8 +1,8 @@
 package ru.course.aston.model;
 
 public class Role {
-private Long roleNameId;
-private String roleName;
+    private Long roleNameId;
+    private String roleName;
 
     public Role(Long roleNameId, String roleName) {
         this.roleNameId = roleNameId;
@@ -28,8 +28,8 @@ private String roleName;
     @Override
     public String toString() {
         return "Role{" +
-                "roleNameId=" + roleNameId +
-                ", roleName='" + roleName + '\'' +
-                '}';
+               "roleNameId=" + roleNameId +
+               ", roleName='" + roleName + '\'' +
+               '}';
     }
 }
