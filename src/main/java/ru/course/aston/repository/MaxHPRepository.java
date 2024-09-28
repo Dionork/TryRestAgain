@@ -16,4 +16,6 @@ public interface MaxHPRepository extends Repository<MaxHP,Long>{
 
     @Override
     List<MaxHP> findAll();
+
+    void update(MaxHP maxHP);
 }

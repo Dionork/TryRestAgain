@@ -76,7 +76,8 @@ public class RoleRepositoryImpl implements RoleRepository {
             statement = connectionManager.getConnection().prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                roles.add(new Role(resultSet.getLong("role_name_id"), resultSet.getString("role_name")));
+                roles.add(new Role(resultSet.getLong("role_name_id"),
+                        resultSet.getString("role_name")));
             }
             return roles;
         } catch (SQLException e) {

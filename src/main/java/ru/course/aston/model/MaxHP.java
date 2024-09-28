@@ -34,4 +34,13 @@ public class MaxHP {
     public void setMaxHP(Long maxHP) {
         this.maxHP = maxHP;
     }
+
+    @Override
+    public String toString() {
+        return "MaxHP{" +
+                "maxHPId=" + maxHPId +
+                ", heroId=" + heroId +
+                ", maxHP=" + maxHP +
+                '}';
+    }
 }

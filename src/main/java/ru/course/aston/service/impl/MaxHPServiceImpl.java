@@ -39,9 +39,6 @@ public class MaxHPServiceImpl implements MaxHPService {
         List<MaxHPDTO> maxHPDTOList = new ArrayList<>();
         for (MaxHP maxHP : maxHPList)  {
             MaxHPDTO maxHPDTO = MaxHPMapper.INSTANCE.toDTO(maxHP);
-            maxHPDTO.setMaxHPId(maxHP.getMaxHPId());
-            maxHPDTO.setMaxHP(maxHP.getMaxHP());
-            maxHPDTO.setHeroId(maxHP.getHeroId());
             maxHPDTOList.add(maxHPDTO);
         }
         return maxHPDTOList;
@@ -49,7 +46,7 @@ public class MaxHPServiceImpl implements MaxHPService {
 
     @Override
     public void update(MaxHPDTO maxHPDTO) {
-        MaxHP maxHP = maxHPRepository.findById(maxHPDTO.getMaxHPId());
-        maxHPRepository.save(maxHP);
+        MaxHP maxHP = MaxHPMapper.INSTANCE.toModel(maxHPDTO);
+        maxHPRepository.update(maxHP);
     }
 }
