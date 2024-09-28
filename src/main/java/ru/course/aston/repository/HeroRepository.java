@@ -16,4 +16,7 @@ public interface HeroRepository extends Repository<Hero,Long>{
 
     @Override
     List<Hero> findAll();
+
+    @Override
+    void update(Hero models);
 }

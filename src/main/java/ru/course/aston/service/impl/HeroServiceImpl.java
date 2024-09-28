@@ -47,6 +47,6 @@ public class HeroServiceImpl implements HeroService {
     @Override
     public void update(HeroDTO heroDTO) {
         Hero hero = HeroMapper.INSTANCE.toModel(heroDTO);
-        heroRepository.save(hero);
+        heroRepository.update(hero);
     }
 }
