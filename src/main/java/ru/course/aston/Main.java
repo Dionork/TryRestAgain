@@ -25,9 +25,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-               MaxHPRepository maxHPRepository = new MaxHPRepositoryImpl();
-        MaxHPService maxHPService = new MaxHPServiceImpl();
-        System.out.println(maxHPService.findById(2L));
+             FractionRepository fractionRepository = new FractionRepositoryImpl();
+        System.out.println(fractionRepository.findById(1L));
 
 
     }

@@ -36,8 +36,6 @@ public class FractionServiceImpl implements FractionService {
         List<FractionDTO> fractionDTOList = new ArrayList<>();
         for (Fraction fraction : fractionsList) {
             FractionDTO fractionDTO = FractionMapper.INSTANCE.toDto(fraction);
-            fractionDTO.setFractionId(fraction.getFractionId());
-            fractionDTO.setFractionName(fraction.getFractionName());
             fractionDTOList.add(fractionDTO);
         }
         return fractionDTOList;
@@ -45,7 +43,7 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     public void update(FractionDTO fractionDTO) {
-        Fraction fraction = fractionRepository.findById(fractionDTO.getFractionId());
-        fractionRepository.save(fraction);
+        Fraction fraction = FractionMapper.INSTANCE.toModel(fractionDTO);
+        fractionRepository.update(fraction);
     }
 }

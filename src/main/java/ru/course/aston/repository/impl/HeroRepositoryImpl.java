@@ -94,4 +94,9 @@ public class HeroRepositoryImpl implements HeroRepository {
         }
         return heroList;
     }
+
+    @Override
+    public void update(Hero models) {
+
+    }
 }

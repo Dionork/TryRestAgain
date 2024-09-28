@@ -16,4 +16,6 @@ public interface FractionRepository extends Repository<Fraction,Long>{
 
     @Override
     List<Fraction> findAll();
+    @Override
+    void update(Fraction fraction);
 }

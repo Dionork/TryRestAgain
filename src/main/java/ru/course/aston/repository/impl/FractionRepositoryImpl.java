@@ -5,6 +5,8 @@ import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.repository.FractionRepository;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -12,45 +14,37 @@ import java.util.List;
 
 public class FractionRepositoryImpl implements FractionRepository {
     private ConnectionManager connectionManager = new ConnectionManagerImpl();
-    private Statement statement;
+    private PreparedStatement statement;
 
-    {
-        try {
-            statement = connectionManager.getConnection().createStatement();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public Fraction findById(Long id) {
         try {
-            statement.executeQuery("SELECT * FROM wow_db.fractions WHERE fraction_id = " + id);
-            if (statement.getResultSet().next()) {
-                Fraction fraction = new Fraction(
-                        statement.getResultSet().getLong("fraction_id"),
-                        statement.getResultSet().getString("fraction_name")
-                );
-                return fraction;
+            String sql = "SELECT * FROM wow_db.fractions WHERE fraction_id =" + id;
+            statement = connectionManager.getConnection().prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                return new Fraction(resultSet.getLong("fraction_id"),
+                        resultSet.getString("fraction_name"));
             }
-            return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             connectionManager.closeConnection();
         }
+        return null;
     }
 
     @Override
     public boolean deleteById(Long id) {
         try {
-            statement.executeUpdate("DELETE FROM wow_db.fractions WHERE fraction_id = " + id);
-            return true;
+            String sql = "DELETE FROM wow_db.fractions WHERE fraction_id =?";
+            statement = connectionManager.getConnection().prepareStatement(sql);
+            statement.setLong(1, id);
+            return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             connectionManager.closeConnection();
         }
     }
@@ -58,13 +52,19 @@ public class FractionRepositoryImpl implements FractionRepository {
     @Override
     public Fraction save(Fraction fraction) {
         try {
-            statement.executeUpdate("INSERT INTO wow_db.fractions (fraction_id,fraction_name) VALUES (" +
-                    fraction.getFractionId()+", '"+ fraction.getFractionName() + "')");
+            String sql = "INSERT INTO wow_db.fractions (fraction_name) VALUES (?)";
+            statement = connectionManager.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            statement.setString(1, fraction.getFractionName());
+            statement.executeUpdate();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                fraction = new Fraction(generatedKeys.getLong(1),
+                        fraction.getFractionName());
+            }
             return fraction;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             connectionManager.closeConnection();
         }
     }
@@ -73,20 +73,33 @@ public class FractionRepositoryImpl implements FractionRepository {
     public List<Fraction> findAll() {
         List<Fraction> fractionList = new ArrayList<>();
         try {
-            statement.executeQuery("SELECT * FROM wow_db.fractions");
-            while (statement.getResultSet().next()) {
-                Fraction fraction = new Fraction(
-                        statement.getResultSet().getLong("fraction_id"),
-                        statement.getResultSet().getString("fraction_name")
-                );
-                fractionList.add(fraction);
+            String sql = "SELECT * FROM wow_db.fractions";
+            statement = connectionManager.getConnection().prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                fractionList.add(new Fraction(resultSet.getLong("fraction_id"),
+                        resultSet.getString("fraction_name")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-        finally {
+        } finally {
             connectionManager.closeConnection();
         }
         return fractionList;
+    }
+
+    @Override
+    public void update(Fraction fraction) {
+        try {
+            String sql = "UPDATE wow_db.fractions SET fraction_name = ? WHERE fraction_id = ?";
+            statement = connectionManager.getConnection().prepareStatement(sql);
+            statement.setString(1, fraction.getFractionName());
+            statement.setLong(2, fraction.getFractionId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            connectionManager.closeConnection();
+        }
     }
 }

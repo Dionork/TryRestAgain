@@ -7,4 +7,5 @@ public interface Repository <T, K>{
     boolean deleteById(K id);
     T save(T entity);
     List<T> findAll();
+    void update(T models);
 }

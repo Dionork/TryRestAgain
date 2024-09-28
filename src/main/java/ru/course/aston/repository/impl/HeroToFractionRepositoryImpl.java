@@ -88,4 +88,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
         return HeroToFractionList;
 
     }
+
+    @Override
+    public void update(HeroToFraction models) {
+
+    }
 }
