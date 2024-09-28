@@ -45,7 +45,7 @@ public class HeroToFractionServiceImpl implements HeroToFractionService {
 
     @Override
     public void update(HeroToFractionDTO heroToFractionDTO) {
-        HeroToFraction heroToFraction = heroToFractionRepository.findById(heroToFractionDTO.getHeroToFractionId());
-        heroToFractionRepository.save(heroToFraction);
+        HeroToFraction heroToFraction = HeroToFractionMapper.INSTANCE.toModel(heroToFractionDTO);
+        heroToFractionRepository.update(heroToFraction);
     }
 }

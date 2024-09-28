@@ -1,12 +1,15 @@
 package ru.course.aston;
 
 
+import ru.course.aston.model.HeroToFraction;
 import ru.course.aston.model.MaxHP;
 import ru.course.aston.model.Role;
 import ru.course.aston.repository.FractionRepository;
+import ru.course.aston.repository.HeroToFractionRepository;
 import ru.course.aston.repository.MaxHPRepository;
 import ru.course.aston.repository.RoleRepository;
 import ru.course.aston.repository.impl.FractionRepositoryImpl;
+import ru.course.aston.repository.impl.HeroToFractionRepositoryImpl;
 import ru.course.aston.repository.impl.MaxHPRepositoryImpl;
 import ru.course.aston.repository.impl.RoleRepositoryImpl;
 import ru.course.aston.service.MaxHPService;
@@ -25,9 +28,8 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-             FractionRepository fractionRepository = new FractionRepositoryImpl();
-        System.out.println(fractionRepository.findById(1L));
-
-
+        HeroToFractionRepository heroToFractionRepository = new HeroToFractionRepositoryImpl();
+        HeroToFraction heroToFraction = new HeroToFraction(1L,2L,1L);
+        heroToFractionRepository.save(heroToFraction);
     }
 }
