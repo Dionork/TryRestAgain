@@ -42,7 +42,6 @@ public class RoleServlet extends HttpServlet {
         try {
             String[] path = req.getPathInfo().split("/");
             if ("all".equals(path[1])) {
-
                 respAnswer = mapper.writeValueAsString(roleService.findAll());
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {

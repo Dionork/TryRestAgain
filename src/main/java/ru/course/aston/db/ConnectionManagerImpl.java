@@ -39,6 +39,7 @@ public class ConnectionManagerImpl implements ConnectionManager {
     public void closeConnection() {
         try {
             getConnection().close();
+            System.out.println("Connection closed");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

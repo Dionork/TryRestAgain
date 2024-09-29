@@ -1,13 +1,28 @@
 package ru.course.aston.model;
 
-public class MaxHP {
-    private Long maxHPId;
-    private Long heroId;
-    private Long maxHP;
+import ru.course.aston.db.ConnectionManager;
+import ru.course.aston.db.ConnectionManagerImpl;
+import ru.course.aston.repository.HeroRepository;
+import ru.course.aston.repository.MaxHPRepository;
+import ru.course.aston.repository.impl.HeroRepositoryImpl;
+import ru.course.aston.repository.impl.MaxHPRepositoryImpl;
 
-    public MaxHP(Long maxHPId, Long heroId, Long maxHP) {
+import java.util.*;
+
+/**
+ * many to one
+ * hero to maxHP
+ */
+public class MaxHP {
+    private HeroRepository heroRepository = new HeroRepositoryImpl();
+    private Long maxHPId;
+    private Hero hero;
+    private Long maxHP;
+    private List<Hero> heroes = heroRepository.findAll();
+
+    public MaxHP(Long maxHPId, Hero hero, Long maxHP) {
         this.maxHPId = maxHPId;
-        this.heroId = heroId;
+        this.hero = hero;
         this.maxHP = maxHP;
     }
 
@@ -19,12 +34,12 @@ public class MaxHP {
         this.maxHPId = maxHPId;
     }
 
-    public Long getHeroId() {
-        return heroId;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setHeroId(Long heroId) {
-        this.heroId = heroId;
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
     public Long getMaxHP() {
@@ -35,12 +50,16 @@ public class MaxHP {
         this.maxHP = maxHP;
     }
 
+    public List<Hero>getHeroesList() {
+        return heroes;
+    }
+
     @Override
     public String toString() {
         return "MaxHP{" +
-                "maxHPId=" + maxHPId +
-                ", heroId=" + heroId +
-                ", maxHP=" + maxHP +
-                '}';
+               "maxHPId=" + maxHPId +
+               ", hero=" + hero +
+               ", maxHP=" + maxHP +
+               '}';
     }
 }

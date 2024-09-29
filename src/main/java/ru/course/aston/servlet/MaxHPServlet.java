@@ -6,10 +6,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.model.Hero;
 import ru.course.aston.model.MaxHP;
+import ru.course.aston.service.HeroService;
 import ru.course.aston.service.MaxHPService;
+import ru.course.aston.service.impl.HeroServiceImpl;
 import ru.course.aston.service.impl.MaxHPServiceImpl;
-import ru.course.aston.servlet.dto.MaxHPDTO;
+import ru.course.aston.servlet.mapper.HeroMapper;
 import ru.course.aston.servlet.mapper.MaxHPMapper;
 
 import java.io.BufferedReader;
@@ -71,7 +74,9 @@ public class MaxHPServlet extends HttpServlet {
                 String id = req.getParameter("maxHPId");
                 String hp = req.getParameter("maxHP");
                 String heroId = req.getParameter("heroId");
-                MaxHP maxHP = new MaxHP(Long.parseLong(id), Long.parseLong(heroId), Long.parseLong(hp));
+                HeroService heroService = new HeroServiceImpl();
+                Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
+                MaxHP maxHP = new MaxHP(Long.parseLong(id),hero, Long.parseLong(hp));
                 maxHPService.update(MaxHPMapper.INSTANCE.toDTO(maxHP));
                 respAnswer = "Изменено";
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -99,7 +104,9 @@ public class MaxHPServlet extends HttpServlet {
                 String id = req.getParameter("maxHPId");
                 String hp = req.getParameter("maxHP");
                 String heroId = req.getParameter("heroId");
-                MaxHP maxHP = new MaxHP(Long.parseLong(id), Long.parseLong(heroId), Long.parseLong(hp));
+                HeroService heroService = new HeroServiceImpl();
+                Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
+                MaxHP maxHP = new MaxHP(Long.parseLong(id),hero, Long.parseLong(hp));
                 maxHPService.save(MaxHPMapper.INSTANCE.toDTO(maxHP));
                 respAnswer = "Добавлено";
                 resp.setStatus(HttpServletResponse.SC_OK);

@@ -44,4 +44,14 @@ private Long roleNameId;
     public void setRoleNameId(Long roleNameId) {
         this.roleNameId = roleNameId;
     }
+
+    @Override
+    public String toString() {
+        return "Hero{" +
+               "heroId=" + heroId +
+               ", heroName='" + heroName + '\'' +
+               ", heroLastName='" + heroLastName + '\'' +
+               ", roleNameId=" + roleNameId +
+               '}';
+    }
 }

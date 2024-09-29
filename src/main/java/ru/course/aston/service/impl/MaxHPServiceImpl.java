@@ -1,5 +1,6 @@
 package ru.course.aston.service.impl;
 
+import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.MaxHP;
 
 import ru.course.aston.repository.MaxHPRepository;

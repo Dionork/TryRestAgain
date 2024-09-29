@@ -1,13 +1,15 @@
 package ru.course.aston.servlet.dto;
 
+import ru.course.aston.model.Hero;
+
 public class MaxHPDTO {
     private Long maxHPId;
-    private Long heroId;
+    private Hero hero;
     private Long maxHP;
 
-    public MaxHPDTO(Long maxHPId, Long heroId, Long maxHP) {
+    public MaxHPDTO(Long maxHPId, Hero hero, Long maxHP) {
         this.maxHPId = maxHPId;
-        this.heroId = heroId;
+        this.hero = hero;
         this.maxHP = maxHP;
     }
 
@@ -19,12 +21,12 @@ public class MaxHPDTO {
         this.maxHPId = maxHPId;
     }
 
-    public Long getHeroId() {
-        return heroId;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setHeroId(Long heroId) {
-        this.heroId = heroId;
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
     public Long getMaxHP() {
