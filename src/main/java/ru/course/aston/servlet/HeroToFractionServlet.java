@@ -6,13 +6,21 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.model.Fraction;
+import ru.course.aston.model.Hero;
 import ru.course.aston.model.HeroToFraction;
-import ru.course.aston.model.MaxHP;
+
+import ru.course.aston.service.FractionService;
+import ru.course.aston.service.HeroService;
 import ru.course.aston.service.HeroToFractionService;
+import ru.course.aston.service.impl.FractionServiceImpl;
+import ru.course.aston.service.impl.HeroServiceImpl;
 import ru.course.aston.service.impl.HeroToFractionServiceImpl;
-import ru.course.aston.service.impl.MaxHPServiceImpl;
+
+import ru.course.aston.servlet.mapper.FractionMapper;
+import ru.course.aston.servlet.mapper.HeroMapper;
 import ru.course.aston.servlet.mapper.HeroToFractionMapper;
-import ru.course.aston.servlet.mapper.MaxHPMapper;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +30,8 @@ import java.io.PrintWriter;
 public class HeroToFractionServlet extends HttpServlet {
     private final ObjectMapper mapper = new ObjectMapper();
     private final HeroToFractionService heroToFractionService = new HeroToFractionServiceImpl();
-
+    private HeroService heroService = new HeroServiceImpl();
+    private FractionService fractionService = new FractionServiceImpl();
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -73,7 +82,9 @@ public class HeroToFractionServlet extends HttpServlet {
                 String id = req.getParameter("heroToFractionId");
                 String fractionId = req.getParameter("fractionId");
                 String heroId = req.getParameter("heroId");
-                HeroToFraction heroToFraction = new HeroToFraction(Long.parseLong(id), Long.parseLong(heroId), Long.parseLong(fractionId));
+                Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
+                Fraction fraction = FractionMapper.INSTANCE.toModel(fractionService.findById(Long.parseLong(fractionId)));
+                HeroToFraction heroToFraction = new HeroToFraction(Long.parseLong(id), hero, fraction);
                 heroToFractionService.update(HeroToFractionMapper.INSTANCE.toDTO(heroToFraction));
                 respAnswer = "Изменено";
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -101,7 +112,9 @@ public class HeroToFractionServlet extends HttpServlet {
                 String id = req.getParameter("heroToFractionId");
                 String fractionId = req.getParameter("fractionId");
                 String heroId = req.getParameter("heroId");
-                HeroToFraction heroToFraction = new HeroToFraction(Long.parseLong(id), Long.parseLong(heroId), Long.parseLong(fractionId));
+                Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
+                Fraction fraction = FractionMapper.INSTANCE.toModel(fractionService.findById(Long.parseLong(fractionId)));
+                HeroToFraction heroToFraction = new HeroToFraction(Long.parseLong(id), hero, fraction);
                 heroToFractionService.save(HeroToFractionMapper.INSTANCE.toDTO(heroToFraction));
                 respAnswer = "Добавлено";
                 resp.setStatus(HttpServletResponse.SC_OK);

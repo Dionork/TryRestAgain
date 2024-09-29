@@ -35,9 +35,6 @@ public class HeroToFractionServiceImpl implements HeroToFractionService {
         List<HeroToFractionDTO> heroToFractionDTOList = new ArrayList<>();
         for (HeroToFraction heroToFraction : heroToFractionsList) {
             HeroToFractionDTO heroToFractionDTO = HeroToFractionMapper.INSTANCE.toDTO(heroToFraction);
-            heroToFractionDTO.setHeroToFractionId(heroToFraction.getHeroToFractionId());
-            heroToFractionDTO.setHeroId(heroToFraction.getHeroId());
-            heroToFractionDTO.setFractionId(heroToFraction.getFractionId());
             heroToFractionDTOList.add(heroToFractionDTO);
         }
         return heroToFractionDTOList;

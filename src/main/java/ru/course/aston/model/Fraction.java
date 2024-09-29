@@ -24,4 +24,12 @@ public class Fraction {
     public void setFractionName(String fractionName) {
         this.fractionName = fractionName;
     }
+
+    @Override
+    public String toString() {
+        return "Fraction{" +
+               "fractionId=" + fractionId +
+               ", fractionName='" + fractionName + '\'' +
+               '}';
+    }
 }

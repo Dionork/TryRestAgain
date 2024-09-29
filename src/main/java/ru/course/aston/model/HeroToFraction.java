@@ -1,14 +1,28 @@
 package ru.course.aston.model;
 
-public class HeroToFraction {
-    private Long heroToFractionId;
-    private Long heroId;
-    private Long fractionId;
+import ru.course.aston.repository.FractionRepository;
+import ru.course.aston.repository.HeroRepository;
+import ru.course.aston.repository.impl.FractionRepositoryImpl;
+import ru.course.aston.repository.impl.HeroRepositoryImpl;
 
-    public HeroToFraction(Long heroToFractionId, Long heroId, Long fractionId) {
+import java.util.List;
+
+/** Класс Many to Many
+ * Hero to Fraction
+ * */
+public class HeroToFraction {
+    private HeroRepository heroRepository = new HeroRepositoryImpl();
+    private FractionRepository fractionRepository = new FractionRepositoryImpl();
+    private List<Fraction> fractions = fractionRepository.findAll();
+    private List<Hero> heroes = heroRepository.findAll();
+    private Long heroToFractionId;
+    private Hero hero;
+    private Fraction fraction;
+
+    public HeroToFraction(Long heroToFractionId, Hero hero, Fraction fraction)  {
         this.heroToFractionId = heroToFractionId;
-        this.heroId = heroId;
-        this.fractionId = fractionId;
+        this.hero = hero;
+        this.fraction = fraction;
     }
 
     public Long getHeroToFractionId() {
@@ -19,19 +33,27 @@ public class HeroToFraction {
         this.heroToFractionId = heroToFractionId;
     }
 
-    public Long getHeroId() {
-        return heroId;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setHeroId(Long heroId) {
-        this.heroId = heroId;
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
-    public Long getFractionId() {
-        return fractionId;
+    public Fraction getFraction() {
+        return fraction;
     }
 
-    public void setFractionId(Long fractionId) {
-        this.fractionId = fractionId;
+    public void setFraction(Fraction fraction) {
+        this.fraction = fraction;
+    }
+
+    public List<Fraction> getFractionsList() {
+        return fractions;
+    }
+
+    public List<Hero> getHeroesList() {
+        return heroes;
     }
 }

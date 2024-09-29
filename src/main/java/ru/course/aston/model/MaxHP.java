@@ -1,11 +1,7 @@
 package ru.course.aston.model;
 
-import ru.course.aston.db.ConnectionManager;
-import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.repository.HeroRepository;
-import ru.course.aston.repository.MaxHPRepository;
 import ru.course.aston.repository.impl.HeroRepositoryImpl;
-import ru.course.aston.repository.impl.MaxHPRepositoryImpl;
 
 import java.util.*;
 

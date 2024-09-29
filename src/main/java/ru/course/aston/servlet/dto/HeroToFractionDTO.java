@@ -1,14 +1,17 @@
 package ru.course.aston.servlet.dto;
 
+import ru.course.aston.model.Fraction;
+import ru.course.aston.model.Hero;
+
 public class HeroToFractionDTO {
     private Long heroToFractionId;
-    private Long heroId;
-    private Long fractionId;
+    private Hero hero;
+    private Fraction fraction;
 
-    public HeroToFractionDTO(Long heroToFractionId, Long heroId, Long fractionId) {
+    public HeroToFractionDTO(Long heroToFractionId, Hero hero, Fraction fraction)  {
         this.heroToFractionId = heroToFractionId;
-        this.heroId = heroId;
-        this.fractionId = fractionId;
+        this.hero = hero;
+        this.fraction = fraction;
     }
 
     public Long getHeroToFractionId() {
@@ -19,19 +22,19 @@ public class HeroToFractionDTO {
         this.heroToFractionId = heroToFractionId;
     }
 
-    public Long getHeroId() {
-        return heroId;
+    public Hero getHero() {
+        return hero;
     }
 
-    public void setHeroId(Long heroId) {
-        this.heroId = heroId;
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
-    public Long getFractionId() {
-        return fractionId;
+    public Fraction getFraction() {
+        return fraction;
     }
 
-    public void setFractionId(Long fractionId) {
-        this.fractionId = fractionId;
+    public void setFraction(Fraction fraction) {
+        this.fraction = fraction;
     }
 }
