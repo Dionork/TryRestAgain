@@ -35,8 +35,6 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return null;
     }
@@ -50,8 +48,6 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -72,8 +68,6 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return maxHP;
     }
@@ -94,8 +88,6 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
             return maxHPList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -111,9 +103,6 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
-
         }
     }
 }

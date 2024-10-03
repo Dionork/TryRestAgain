@@ -29,8 +29,6 @@ public class FractionRepositoryImpl implements FractionRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return null;
     }
@@ -44,8 +42,6 @@ public class FractionRepositoryImpl implements FractionRepository {
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -64,8 +60,6 @@ public class FractionRepositoryImpl implements FractionRepository {
             return fraction;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -82,8 +76,6 @@ public class FractionRepositoryImpl implements FractionRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return fractionList;
     }
@@ -98,8 +90,6 @@ public class FractionRepositoryImpl implements FractionRepository {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 }

@@ -41,8 +41,6 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return null;
     }
@@ -56,8 +54,6 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -82,8 +78,6 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             return heroToFraction;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -103,8 +97,6 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return HeroToFractionList;
 
@@ -121,9 +113,6 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
-
         }
     }
 }

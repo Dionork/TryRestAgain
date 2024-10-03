@@ -30,8 +30,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             return null;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -44,8 +42,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -64,8 +60,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             return entity;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -83,8 +77,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             return roles;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 @Override
@@ -97,8 +89,6 @@ public class RoleRepositoryImpl implements RoleRepository {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 }

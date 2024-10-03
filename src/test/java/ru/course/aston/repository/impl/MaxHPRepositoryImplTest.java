@@ -1,34 +1,42 @@
 package ru.course.aston.repository.impl;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import ru.course.aston.InitSchemeSql;
+import org.junit.jupiter.api.*;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.lifecycle.Startables;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.model.MaxHP;
 import ru.course.aston.repository.MaxHPRepository;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
-
+@Testcontainers
 class MaxHPRepositoryImplTest {
     MaxHPRepository maxHPRepository = new MaxHPRepositoryImpl();
+    @Container
+    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
+//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
+            .withInitScript("sql/schema.sql");
+
     @BeforeAll
-    public static void initSQL() {
-        ConnectionManager connectionManager = new ConnectionManagerImpl();
-        PreparedStatement statement;
+    public static void startContainer() {
+        System.out.println("Старт контейнера");
+        container.start();
 
+    }
 
+    @BeforeEach
+    void setUp() {
+        ConnectionManager connection = new ConnectionManagerImpl();
         try {
-            statement = connectionManager.getConnection().prepareStatement(InitSchemeSql.INIT_SCHEME_SQL);
-            statement.executeUpdate();
+            System.out.println("Стартация контейнера");
+            connection.getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
     @Test
@@ -81,5 +89,10 @@ class MaxHPRepositoryImplTest {
         Assertions.assertEquals(maxHP.getMaxHP(),result.get().getMaxHP()
         );
 
+    }
+    @AfterAll
+    public static void stopContainer() {
+        System.out.println("Стоп контейнера");
+        container.stop();
     }
 }

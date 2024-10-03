@@ -1,62 +1,88 @@
 package ru.course.aston.repository.impl;
 
 import org.junit.jupiter.api.*;
-import ru.course.aston.InitSchemeSql;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.repository.FractionRepository;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
+
+@Testcontainers
 class FractionRepositoryImplTest {
     FractionRepository fractionRepository = new FractionRepositoryImpl();
-    @BeforeAll
-    public static void initSQL() {
-        ConnectionManager connectionManager = new ConnectionManagerImpl();
-        PreparedStatement statement;
-        try {
-            statement = connectionManager.getConnection().prepareStatement(InitSchemeSql.INIT_SCHEME_SQL);
-            statement.executeUpdate();
+    @Container
+    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
+//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
+            .withInitScript("sql/schema.sql");
 
+    @BeforeAll
+    public static void startContainer() {
+        System.out.println("Старт контейнера");
+        container.start();
+
+    }
+
+    @BeforeEach
+    void setUp() {
+        ConnectionManager connection = new ConnectionManagerImpl();
+        try {
+            System.out.println("Стартация контейнера");
+            connection.getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
-@Test
+
+    @Test
     public void createFraction() {
-    Fraction fraction = new Fraction(3L,"Fraction");
-    fractionRepository.save(fraction);
-    Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
-    Assertions.assertTrue(result.isPresent());
-    Assertions.assertEquals(fraction.getFractionName(),result.get().getFractionName());
-}
-@Test
+        Fraction fraction = new Fraction(3L, "Fraction");
+        Long id = fractionRepository.save(fraction).getFractionId();
+        Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(id));
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(fraction.getFractionName(), result.get().getFractionName());
+        fractionRepository.deleteById(id);
+    }
+
+    @Test
     public void updateFraction() {
-    Fraction fraction = new Fraction(2L,"Бурда");
-    fractionRepository.update(fraction);
-    Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
-   Assertions.assertTrue(result.isPresent());
-    Assertions.assertEquals(fraction.getFractionName(),result.get().getFractionName());
-}
-@Test
-public void findByIdFraction() {
-    Fraction fraction = new Fraction(2L,"Орда");
-    Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
-   Assertions.assertTrue(result.isPresent());
-    Assertions.assertEquals(fraction.getFractionName(),result.get().getFractionName());
-}
-@Test
+        Fraction fraction = new Fraction(2L, "Бурда");
+        fractionRepository.update(fraction);
+        Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(fraction.getFractionName(), result.get().getFractionName());
+        fractionRepository.update(new Fraction(2L, "Орда"));
+
+    }
+
+    @Test
+    public void findByIdFraction() {
+        Fraction fraction = new Fraction(1L, "Альянс");
+        Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(fraction.getFractionName(), result.get().getFractionName());
+    }
+
+    @Test
     public void deleteFraction() {
-    fractionRepository.deleteById(3L);
-    Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(3L));
-    Assertions.assertFalse(result.isPresent());
-}
+        fractionRepository.deleteById(11L);
+        Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(3L));
+        Assertions.assertFalse(result.isPresent());
+    }
+
     @Test
     public void findAllFraction() {
-        Assertions.assertEquals(3,fractionRepository.findAll().size());
+        Assertions.assertEquals(2, fractionRepository.findAll().size());
+    }
+
+    @AfterAll
+    public static void stopContainer() {
+        System.out.println("Стоп контейнера");
+        container.stop();
     }
 }

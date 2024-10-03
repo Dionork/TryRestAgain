@@ -35,8 +35,6 @@ public class HeroRepositoryImpl implements HeroRepository {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
         return null;
     }
@@ -50,8 +48,6 @@ public class HeroRepositoryImpl implements HeroRepository {
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -75,8 +71,6 @@ public class HeroRepositoryImpl implements HeroRepository {
             return hero;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -99,8 +93,6 @@ public class HeroRepositoryImpl implements HeroRepository {
             return heroList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 
@@ -116,8 +108,6 @@ public class HeroRepositoryImpl implements HeroRepository {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            connectionManager.closeConnection();
         }
     }
 }
