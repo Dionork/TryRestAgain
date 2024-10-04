@@ -65,11 +65,12 @@ class MaxHPRepositoryImplTest {
                 new Hero(1L, "Hero", "HeroLastName", 1L),
                 123456L
         );
-        maxHPRepository.save(maxHP);
-        Optional<MaxHP> result = Optional.ofNullable(maxHPRepository.findById(8L));
+        Long id = maxHPRepository.save(maxHP).getMaxHPId();
+        Optional<MaxHP> result = Optional.ofNullable(maxHPRepository.findById(id));
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(maxHP.getMaxHP(),result.get().getMaxHP()
         );
+        maxHPRepository.deleteById(id);
     }
 
     @Test

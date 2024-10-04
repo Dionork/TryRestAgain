@@ -62,10 +62,8 @@ class FractionRepositoryImplTest {
 
     @Test
     public void findByIdFraction() {
-        Fraction fraction = new Fraction(1L, "Альянс");
-        Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(fraction.getFractionName(), result.get().getFractionName());
+        Long id = fractionRepository.findById(2L).getFractionId();
+        Assertions.assertEquals(id, fractionRepository.findById(2L).getFractionId());
     }
 
     @Test

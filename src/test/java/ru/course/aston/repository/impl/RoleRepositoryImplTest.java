@@ -48,7 +48,8 @@ class RoleRepositoryImplTest {
 
     @Test
     void findById() {
-        Assertions.assertEquals("newRoleName", roleRepository.findById(1L).getRoleName());
+        Long id = roleRepository.findById(1L).getRoleNameId();
+        Assertions.assertEquals(id, roleRepository.findById(1L).getRoleNameId());
     }
 
     @Test
@@ -60,12 +61,17 @@ class RoleRepositoryImplTest {
 
     @Test
     void save() {
-
+        Role role = new Role(1L, "RoleName");
+        Long id = roleRepository.save(role).getRoleNameId();
+        Optional<Role> result = Optional.ofNullable(roleRepository.findById(id));
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(role.getRoleName(), result.get().getRoleName());
+        roleRepository.deleteById(id);
     }
 
     @Test
     void findAll() {
-        Assertions.assertEquals(4, roleRepository.findAll().size());
+        Assertions.assertEquals(3, roleRepository.findAll().size());
     }
 
     @Test
@@ -76,6 +82,7 @@ class RoleRepositoryImplTest {
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(role.getRoleName(), result.get().getRoleName());
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

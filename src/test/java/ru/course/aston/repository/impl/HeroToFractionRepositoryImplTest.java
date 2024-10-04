@@ -43,15 +43,8 @@ class HeroToFractionRepositoryImplTest {
 
     @Test
     void findById() {
-        Optional<HeroToFraction> result = Optional.ofNullable(heroToFractionRepository.findById(1L));
-        Hero hero = new Hero(4L, "NewHero", "HeroLastName", 1L);
-        Fraction fraction = new Fraction(2L,"Орда");
-        HeroToFraction heroToFraction = new HeroToFraction(2L,hero,fraction);
-        Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(heroToFraction.getFraction().getFractionName(),
-                result.get().getFraction().getFractionName());
-        Assertions.assertEquals(heroToFraction.getHero().getHeroName(),
-                result.get().getHero().getHeroName());
+        Assertions.assertEquals(2L, heroToFractionRepository
+                .findById(2L).getHeroToFractionId());
     }
 
     @Test

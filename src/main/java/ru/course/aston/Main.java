@@ -24,29 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        Process process = null;
-        try {
-            process = Runtime.getRuntime().exec("docker build -t db");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            process.waitFor(60, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String line;
-        while (true) {
-            try {
-                if (!((line = reader.readLine()) != null)) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            System.out.println(line);
-
-        }
-
+RoleService roleService = new RoleServiceImpl();
+roleService.deleteById(17L);
     }
 }
