@@ -30,17 +30,6 @@ class HeroToFractionRepositoryImplTest {
 
     }
 
-    @BeforeEach
-    void setUp() {
-        ConnectionManager connection = new ConnectionManagerImpl();
-        try {
-            System.out.println("Стартация контейнера");
-            connection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     void findById() {
         Assertions.assertEquals(2L, heroToFractionRepository
@@ -85,6 +74,7 @@ class HeroToFractionRepositoryImplTest {
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(heroToFraction.getFraction().getFractionName(),result.get().getFraction().getFractionName());
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

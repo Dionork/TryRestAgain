@@ -1,14 +1,19 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.course.aston.db.ConnectionManager;
+import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.service.HeroService;
 import ru.course.aston.servlet.dto.HeroDTO;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
@@ -78,6 +83,7 @@ class HeroServiceImplTest {
         assertEquals(heroService.findById(1L).getHeroName(), "Тралл");
 
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

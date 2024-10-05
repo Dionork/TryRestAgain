@@ -27,18 +27,6 @@ class FractionRepositoryImplTest {
         container.start();
 
     }
-
-    @BeforeEach
-    void setUp() {
-        ConnectionManager connection = new ConnectionManagerImpl();
-        try {
-            System.out.println("Стартация контейнера");
-            connection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void createFraction() {
         Fraction fraction = new Fraction(3L, "Fraction");
@@ -77,6 +65,7 @@ class FractionRepositoryImplTest {
     public void findAllFraction() {
         Assertions.assertEquals(2, fractionRepository.findAll().size());
     }
+
 
     @AfterAll
     public static void stopContainer() {

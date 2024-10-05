@@ -1,14 +1,19 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.course.aston.db.ConnectionManager;
+import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.service.RoleService;
 import ru.course.aston.servlet.dto.RoleDTO;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
@@ -64,6 +69,7 @@ class RoleServiceImplTest {
         roleService.update(roleDTO);
         assertEquals(roleService.findById(1L).getRoleName(),roleDTO.getRoleName());
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

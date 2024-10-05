@@ -8,44 +8,44 @@ import java.sql.SQLException;
 
 
 public class ConnectionManagerImpl implements ConnectionManager {
-    String driver = "db.driver-class-name";
+    static String driver = "db.driver-class-name";
     String url = "db.url";
     String user = "db.username";
     String password = "db.password";
-    Connection connection;
-    /**
-     * @return Подключение к БД
-     */
+    private static ConnectionManager instance;
+
+    public static ConnectionManager getInstance() {
+        if (instance == null) {
+            instance = new ConnectionManagerImpl();
+            loadDriver();
+            System.out.println("Новое соединение");
+        }
+        return instance;
+    }
+
     @Override
-    public Connection getConnection() {
-        if (connection == null) {
-            try {
-                Class.forName(PropertiesUtils.getProperty(driver));
-                connection = DriverManager.getConnection(
-                        PropertiesUtils.getProperty(url),
-                        PropertiesUtils.getProperty(user),
-                        PropertiesUtils.getProperty(password));
-                if (connection != null) {
-                    System.out.println("Connection successful");
-                } else {
-                    System.out.println("Connection failed");
-                }
-            } catch (SQLException | ClassNotFoundException e) {
-                System.out.println(e);
-            }
-            return connection;
-        } else {
-            System.out.println("Connection already exists");
-            return connection;}
+    public Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(PropertiesUtils.getProperty(url),
+                PropertiesUtils.getProperty(user),
+                PropertiesUtils.getProperty(password));
+
     }
 
     @Override
     public void closeConnection() {
+        ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
         try {
-            getConnection().close();
-            System.out.println("Connection closed");
+            System.out.println("Закрытие соединения");
+            connectionManager.getConnection().close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+    }
+    private static void loadDriver() {
+        try {
+            Class.forName(PropertiesUtils.getProperty(driver));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

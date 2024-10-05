@@ -14,6 +14,7 @@ import ru.course.aston.repository.MaxHPRepository;
 
 import java.sql.SQLException;
 import java.util.Optional;
+
 @Testcontainers
 class MaxHPRepositoryImplTest {
     MaxHPRepository maxHPRepository = new MaxHPRepositoryImpl();
@@ -29,16 +30,7 @@ class MaxHPRepositoryImplTest {
 
     }
 
-    @BeforeEach
-    void setUp() {
-        ConnectionManager connection = new ConnectionManagerImpl();
-        try {
-            System.out.println("Стартация контейнера");
-            connection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     @Test
     void findById() {
         MaxHP maxHP = new MaxHP(8L,
@@ -48,7 +40,7 @@ class MaxHPRepositoryImplTest {
         maxHPRepository.findById(1L);
         Optional<MaxHP> result = Optional.ofNullable(maxHPRepository.findById(1L));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(maxHP.getMaxHP(),result.get().getMaxHP()
+        Assertions.assertEquals(maxHP.getMaxHP(), result.get().getMaxHP()
         );
     }
 
@@ -68,7 +60,7 @@ class MaxHPRepositoryImplTest {
         Long id = maxHPRepository.save(maxHP).getMaxHPId();
         Optional<MaxHP> result = Optional.ofNullable(maxHPRepository.findById(id));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(maxHP.getMaxHP(),result.get().getMaxHP()
+        Assertions.assertEquals(maxHP.getMaxHP(), result.get().getMaxHP()
         );
         maxHPRepository.deleteById(id);
     }
@@ -87,10 +79,11 @@ class MaxHPRepositoryImplTest {
         maxHPRepository.update(maxHP);
         Optional<MaxHP> result = Optional.ofNullable(maxHPRepository.findById(2L));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(maxHP.getMaxHP(),result.get().getMaxHP()
+        Assertions.assertEquals(maxHP.getMaxHP(), result.get().getMaxHP()
         );
 
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

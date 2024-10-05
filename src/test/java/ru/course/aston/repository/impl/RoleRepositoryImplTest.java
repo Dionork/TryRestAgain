@@ -32,16 +32,7 @@ class RoleRepositoryImplTest {
 
     }
 
-    @BeforeEach
-    void setUp() {
-        ConnectionManager connection = new ConnectionManagerImpl();
-        try {
-            System.out.println("Стартация контейнера");
-            connection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
 
     RoleRepository roleRepository = new RoleRepositoryImpl();
@@ -82,7 +73,6 @@ class RoleRepositoryImplTest {
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(role.getRoleName(), result.get().getRoleName());
     }
-
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

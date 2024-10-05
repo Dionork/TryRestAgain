@@ -9,26 +9,21 @@ import ru.course.aston.repository.FractionRepository;
 import ru.course.aston.repository.HeroRepository;
 import ru.course.aston.repository.HeroToFractionRepository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl();
-    private PreparedStatement statement;
+    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
     HeroRepository heroRepository = new HeroRepositoryImpl();
     FractionRepository fractionRepository = new FractionRepositoryImpl();
 
     @Override
     public HeroToFraction findById(Long id) {
-        try {
-            String sql = "SELECT * FROM wow_db.heroes_fractions WHERE heroes_fraction_id =" + id;
-            statement = connectionManager.getConnection().prepareStatement(sql);
+        String sql = "SELECT * FROM wow_db.heroes_fractions WHERE heroes_fraction_id =" + id;
+        try (Connection connection = connectionManager.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
-
             if (resultSet.next()) {
                 Hero hero = heroRepository.findById(resultSet.getLong("hero_id"));
                 Fraction fraction = fractionRepository.findById(resultSet.getLong("fraction_id"));
@@ -47,9 +42,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public boolean deleteById(Long id) {
-        try {
-            String sql = "DELETE FROM wow_db.heroes_fractions WHERE heroes_fraction_id=" + id;
-            statement = connectionManager.getConnection().prepareStatement(sql);
+        String sql = "DELETE FROM wow_db.heroes_fractions WHERE heroes_fraction_id=" + id;
+        try (Connection connection = connectionManager.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -59,9 +54,10 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public HeroToFraction save(HeroToFraction heroToFraction) {
-        try {
-            String sql = "INSERT INTO wow_db.heroes_fractions (hero_id, fraction_id) VALUES (?, ?)";
-            statement = connectionManager.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        String sql = "INSERT INTO wow_db.heroes_fractions (hero_id, fraction_id) VALUES (?, ?)";
+        try (Connection connection = connectionManager.getConnection();
+                PreparedStatement statement =
+                     connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
             statement.setLong(1, heroToFraction.getHero().getHeroId());
             statement.setLong(2, heroToFraction.getFraction().getFractionId());
             statement.executeUpdate();
@@ -84,9 +80,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
     @Override
     public List<HeroToFraction> findAll() {
         List<HeroToFraction> HeroToFractionList = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM wow_db.heroes_fractions";
-            statement = connectionManager.getConnection().prepareStatement(sql);
+        String sql = "SELECT * FROM wow_db.heroes_fractions";
+        try (Connection connection = connectionManager.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 HeroToFractionList.add(new HeroToFraction(
@@ -104,9 +100,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public void update(HeroToFraction models) {
-        try {
-            String sql = "UPDATE wow_db.heroes_fractions SET hero_id = ?, fraction_id = ? WHERE heroes_fraction_id = ?";
-            statement = connectionManager.getConnection().prepareStatement(sql);
+        String sql = "UPDATE wow_db.heroes_fractions SET hero_id = ?, fraction_id = ? WHERE heroes_fraction_id = ?";
+        try (Connection connection = connectionManager.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);) {
             statement.setLong(1, models.getHero().getHeroId());
             statement.setLong(2, models.getFraction().getFractionId());
             statement.setLong(3, models.getHeroToFractionId());

@@ -26,16 +26,7 @@ class HeroRepositoryImplTest {
         System.out.println("Старт контейнера");
         container.start();
     }
-    @BeforeEach
-    void setUp() {
-        ConnectionManager connection = new ConnectionManagerImpl();
-        try {
-            System.out.println("Стартация контейнера");
-            connection.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
     @Test
     void findById() {
         Hero hero = new Hero(2L,"Сильвана", "Ветрокрылова", 3L);
@@ -75,6 +66,7 @@ class HeroRepositoryImplTest {
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(hero.getHeroName(),result.get().getHeroName());
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

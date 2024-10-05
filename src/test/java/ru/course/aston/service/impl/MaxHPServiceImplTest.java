@@ -1,15 +1,20 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import ru.course.aston.db.ConnectionManager;
+import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.service.MaxHPService;
 import ru.course.aston.servlet.dto.MaxHPDTO;
+
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
@@ -34,10 +39,28 @@ class MaxHPServiceImplTest {
 
     @Test
     void deleteById() {
+        Hero hero = new Hero(2L,
+                "Сильванна",
+                "Ветрокрылова",
+                3L);
+        MaxHPDTO maxHPDTO = new MaxHPDTO(2L,hero,2222000L);
+        MaxHPService service = new MaxHPServiceImpl();
+        Long id = service.save(maxHPDTO).getMaxHPId();
+        service.deleteById(id);
+        assertNull(service.findById(id));
     }
 
     @Test
     void save() {
+        Hero hero = new Hero(2L,
+                "Сильванна",
+                "Ветрокрылова",
+                3L);
+        MaxHPDTO maxHPDTO = new MaxHPDTO(2L,hero,2222000L);
+        MaxHPService service = new MaxHPServiceImpl();
+        Long id = service.save(maxHPDTO).getMaxHPId();
+        assertEquals(2222000L, service.findById(id).getMaxHP());
+        service.deleteById(id);
     }
 
     @Test
@@ -58,6 +81,7 @@ class MaxHPServiceImplTest {
         service.update(maxHPDTO);
         assertEquals(22220L, service.findById(2L).getMaxHP());
     }
+
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");
