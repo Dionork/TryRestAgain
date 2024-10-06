@@ -42,7 +42,6 @@ public class MaxHPServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setJsonHeader(resp);
-        String json = getJsonHeader(req);
         String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");

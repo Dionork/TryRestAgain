@@ -64,6 +64,7 @@ public class FractionServlet extends HttpServlet {
     @Override
     //Изменение объекта
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setJsonHeader(resp);
         String respAnswer = "";
         try {
             String[] path = req.getPathInfo().split("/");

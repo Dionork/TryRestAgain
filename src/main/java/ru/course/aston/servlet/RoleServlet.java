@@ -52,6 +52,7 @@ public class RoleServlet extends HttpServlet {
         } catch (Exception e) {
             e.getMessage();
             respAnswer = "Ошибка";
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();
         out.write(respAnswer);

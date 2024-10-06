@@ -12,6 +12,14 @@ import java.util.List;
 
 public class FractionServiceImpl implements FractionService {
     private FractionRepository fractionRepository = new FractionRepositoryImpl();
+    private static FractionServiceImpl instance = new FractionServiceImpl();
+
+    public static FractionServiceImpl getInstance() {
+        if (instance == null){
+            instance = new FractionServiceImpl();
+        }
+        return instance;
+    }
 
     @Override
     public FractionDTO findById(Long id) {
