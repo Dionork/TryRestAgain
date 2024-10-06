@@ -20,6 +20,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public HeroToFraction findById(Long id) {
+        if (id == null) {
+            throw new NullPointerException();
+        }
         String sql = "SELECT * FROM wow_db.heroes_fractions WHERE heroes_fraction_id =" + id;
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -42,6 +45,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public boolean deleteById(Long id) {
+        if (id == null) {
+            throw new NullPointerException();
+        }
         String sql = "DELETE FROM wow_db.heroes_fractions WHERE heroes_fraction_id=" + id;
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -54,6 +60,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public HeroToFraction save(HeroToFraction heroToFraction) {
+        if (heroToFraction == null) {
+            throw new NullPointerException();
+        }
         String sql = "INSERT INTO wow_db.heroes_fractions (hero_id, fraction_id) VALUES (?, ?)";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement =
@@ -100,6 +109,9 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public void update(HeroToFraction models) {
+        if (models == null) {
+            throw new NullPointerException();
+        }
         String sql = "UPDATE wow_db.heroes_fractions SET hero_id = ?, fraction_id = ? WHERE heroes_fraction_id = ?";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql);) {

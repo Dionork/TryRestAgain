@@ -53,14 +53,32 @@ class RoleServletTest {
     }
 
     @Test
-    void doPost() {
+    void doPostBadRequest() throws IOException, ServletException  {
+        RoleServlet servlet = new RoleServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        servlet.doPost(request, response);
+        verify(response).setStatus(400);
     }
 
     @Test
-    void doPut() {
+    void doPutBadRequest() throws IOException, ServletException {
+        RoleServlet servlet = new RoleServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        servlet.doPut(request, response);
+        verify(response).setStatus(400);
     }
 
     @Test
-    void doDelete() {
+    void doDeleteBadRequest() throws IOException, ServletException  {
+        RoleServlet servlet = new RoleServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        servlet.doDelete(request, response);
+        verify(response).setStatus(400);
     }
 }

@@ -24,16 +24,6 @@ public class RoleServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
     }
 
-    private static String getJsonHeader(HttpServletRequest req) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = req.getReader();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-        return builder.toString();
-    }
-
     @Override
     //Запрос на сервлет
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -91,7 +81,6 @@ public class RoleServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String respAnswer = "";
         setJsonHeader(resp);
-        String json = getJsonHeader(req);
         try {
             String[] path = req.getPathInfo().split("/");
             if ("new".equals(path[1])) {

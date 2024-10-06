@@ -5,14 +5,17 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startables;
-import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.repository.HeroRepository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @Testcontainers
 class HeroRepositoryImplTest {
     HeroRepository heroRepository = new HeroRepositoryImpl();
@@ -29,11 +32,11 @@ class HeroRepositoryImplTest {
 
     @Test
     void findById() {
-        Hero hero = new Hero(2L,"Сильвана", "Ветрокрылова", 3L);
+        Hero hero = new Hero(2L, "Сильвана", "Ветрокрылова", 3L);
         heroRepository.findById(1L);
         Optional<Hero> result = Optional.ofNullable(heroRepository.findById(hero.getHeroId()));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(hero.getHeroName(),result.get().getHeroName());
+        Assertions.assertEquals(hero.getHeroName(), result.get().getHeroName());
     }
 
     @Test
@@ -49,13 +52,13 @@ class HeroRepositoryImplTest {
         Long id = heroRepository.save(hero).getHeroId();
         Optional<Hero> result = Optional.ofNullable(heroRepository.findById(id));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(hero.getHeroName(),result.get().getHeroName());
+        Assertions.assertEquals(hero.getHeroName(), result.get().getHeroName());
         heroRepository.deleteById(id);
     }
 
     @Test
     void findAll() {
-        Assertions.assertEquals(7,heroRepository.findAll().size());
+        Assertions.assertEquals(7, heroRepository.findAll().size());
     }
 
     @Test
@@ -64,7 +67,7 @@ class HeroRepositoryImplTest {
         heroRepository.update(hero);
         Optional<Hero> result = Optional.ofNullable(heroRepository.findById(hero.getHeroId()));
         Assertions.assertTrue(result.isPresent());
-        Assertions.assertEquals(hero.getHeroName(),result.get().getHeroName());
+        Assertions.assertEquals(hero.getHeroName(), result.get().getHeroName());
     }
 
     @AfterAll
@@ -72,4 +75,85 @@ class HeroRepositoryImplTest {
         System.out.println("Стоп контейнера");
         container.stop();
     }
+
+    @Test
+    void findByHeroIDNull() {
+        assertThrows(NullPointerException.class, () -> heroRepository.findById(null));
+    }
+
+    @Test
+    void saveNull() {
+        assertThrows(NullPointerException.class, () -> heroRepository.save(null));
+    }
+
+    @Test
+    void updateNull() {
+        assertThrows(NullPointerException.class, () -> heroRepository.update(null));
+    }
+
+    @Test
+    void deleteByIdNull() {
+        assertThrows(NullPointerException.class, () -> heroRepository.deleteById(null));
+    }
+
+    @Test
+    void findByIdSQLException() {
+        assertThrows(SQLException.class, () -> {
+            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("select * from hero where hero_id = ?");
+                preparedStatement.setLong(1, 1L);
+                preparedStatement.executeQuery();
+            }
+        });
+    }
+
+    @Test
+    void saveSQLException() {
+        assertThrows(SQLException.class, () -> {
+            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("insert into hero (hero_id, hero_name, hero_last_name, team_id) values (?,?,?,?)");
+                preparedStatement.setLong(1, 1L);
+                preparedStatement.setString(2, "Hero");
+                preparedStatement.setString(3, "HeroLastName");
+                preparedStatement.setLong(4, 1L);
+                preparedStatement.executeUpdate();
+            }
+        });
+    }
+
+    @Test
+    void updateSQLException() {
+        assertThrows(SQLException.class, () -> {
+            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("update hero set hero_name = ?, hero_last_name = ?, team_id = ? where hero_id = ?");
+                preparedStatement.setString(1, "Hero");
+                preparedStatement.setString(2, "HeroLastName");
+                preparedStatement.setLong(3, 1L);
+                preparedStatement.setLong(4, 1L);
+                preparedStatement.executeUpdate();
+            }
+        });
+    }
+
+    @Test
+    void deleteByIdSQLException() {
+        assertThrows(SQLException.class, () -> {
+            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("delete from hero where hero_id = ?");
+                preparedStatement.setLong(1, 1L);
+                preparedStatement.executeUpdate();
+            }
+        });
+    }
+
+    @Test
+    void findAllSQLException() {
+        assertThrows(SQLException.class, () -> {
+            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("select * from hero");
+                preparedStatement.executeQuery();
+            }
+        });
+    }
+
 }

@@ -54,14 +54,32 @@ class HeroServletTest {
     }
 
     @Test
-    void doPost() {
+    void doPostBadRequest() throws IOException, ServletException  {
+        HeroServlet  heroServlet = new HeroServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        heroServlet.doPost(request, response);
+        verify(response).setStatus(400);
     }
 
     @Test
-    void doPut() {
+    void doPutBadRequest() throws IOException, ServletException {
+        HeroServlet  heroServlet = new HeroServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        heroServlet.doPut(request, response);
+        verify(response).setStatus(400);
     }
 
     @Test
-    void doDelete() {
+    void doDeleteBadRequest() throws IOException, ServletException  {
+        HeroServlet  heroServlet = new HeroServlet();
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+        when(response.getWriter()).thenReturn(new PrintWriter(System.out));
+        heroServlet.doDelete(request, response);
+        verify(response).setStatus(400);
     }
 }

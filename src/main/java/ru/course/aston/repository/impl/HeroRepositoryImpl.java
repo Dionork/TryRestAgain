@@ -15,6 +15,9 @@ public class HeroRepositoryImpl implements HeroRepository {
     @Override
     public Hero findById(Long id) {
         String sql = "SELECT * FROM wow_db.heroes WHERE hero_id =" + id;
+        if (id == null){
+            throw new NullPointerException();
+        }
         try (Connection connection = connectionManager.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
@@ -36,6 +39,9 @@ public class HeroRepositoryImpl implements HeroRepository {
 
     @Override
     public boolean deleteById(Long id) {
+        if (id == null){
+            throw new NullPointerException();
+        }
         String sql = "DELETE FROM wow_db.heroes WHERE hero_id =" + id;
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,6 +54,9 @@ public class HeroRepositoryImpl implements HeroRepository {
 
     @Override
     public Hero save(Hero hero) {
+        if (hero == null){
+            throw new NullPointerException();
+        }
         String sql = "INSERT INTO wow_db.heroes (hero_name, hero_lastname, role_name_id) VALUES (?, ?, ?)";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql,
@@ -94,6 +103,9 @@ public class HeroRepositoryImpl implements HeroRepository {
 
     @Override
     public void update(Hero models) {
+        if (models == null){
+            throw new NullPointerException();
+        }
         String sql = "UPDATE wow_db.heroes SET hero_name = ?, hero_lastname = ?, role_name_id = ? WHERE hero_id = ?";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)){

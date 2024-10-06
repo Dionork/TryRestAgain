@@ -24,17 +24,6 @@ public class FractionServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
-
-    private static String getJsonHeader(HttpServletRequest req) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = req.getReader();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-        return builder.toString();
-    }
-
     @Override
     //Запрос на сервлет
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,10 +62,10 @@ public class FractionServlet extends HttpServlet {
                 FractionDTO fractionDTO = new FractionDTO(Long.valueOf(params[0]), params[1]);//Парсим
                 fractionService.update(fractionDTO); //Сохраняем
                 respAnswer = "Изменен";
-                resp.setStatus(HttpServletResponse.SC_OK); //Успешно
+                resp.setStatus(200); //Успешно
             } else {
                 respAnswer = "Ошибка запроса";
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); //Успешно}
+                resp.setStatus(400);
             }
         } catch (Exception e) {
             e.getMessage();
@@ -94,7 +83,6 @@ public class FractionServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String respAnswer = "";
         setJsonHeader(resp);
-        String json = getJsonHeader(req);
         try {
             String[] path = req.getPathInfo().split("/");
             if ("new".equals(path[1])) {

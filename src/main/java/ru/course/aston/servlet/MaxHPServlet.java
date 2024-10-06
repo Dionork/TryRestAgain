@@ -28,17 +28,6 @@ public class MaxHPServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
-
-    private static String getJsonHeader(HttpServletRequest req) throws IOException {
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = req.getReader();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-        return builder.toString();
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setJsonHeader(resp);
@@ -66,7 +55,6 @@ public class MaxHPServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String respAnswer = "";
         setJsonHeader(resp);
-        String json = getJsonHeader(req);
         try {
             String[] path = req.getPathInfo().split("/");
             if ("update".equals(path[1])) {
@@ -96,7 +84,6 @@ public class MaxHPServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String respAnswer = "";
         setJsonHeader(resp);
-        String json = getJsonHeader(req);
         try {
             String[] path = req.getPathInfo().split("/");
             if ("new".equals(path[1])) {
