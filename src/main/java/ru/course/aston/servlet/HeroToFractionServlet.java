@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.model.Hero;
 import ru.course.aston.model.HeroToFraction;
@@ -28,10 +29,23 @@ import java.io.PrintWriter;
 
 @WebServlet("/herotofraction/*")
 public class HeroToFractionServlet extends HttpServlet {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final HeroToFractionService heroToFractionService = new HeroToFractionServiceImpl();
-    private HeroService heroService = new HeroServiceImpl();
-    private FractionService fractionService = new FractionServiceImpl();
+    private final ObjectMapper mapper;
+    private final HeroToFractionService heroToFractionService;
+    private HeroService heroService ;
+    private FractionService fractionService;
+
+    public HeroToFractionServlet(ConnectionManager connectionManager) {
+        heroToFractionService = new HeroToFractionServiceImpl(connectionManager);
+        heroService = new HeroServiceImpl(connectionManager);
+        fractionService = new FractionServiceImpl(connectionManager);
+        mapper = new ObjectMapper();
+    }
+    public HeroToFractionServlet() {
+        heroToFractionService = new HeroToFractionServiceImpl();
+        heroService = new HeroServiceImpl();
+        fractionService = new FractionServiceImpl();
+        mapper = new ObjectMapper();
+    }
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

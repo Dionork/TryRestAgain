@@ -1,5 +1,7 @@
 package ru.course.aston.service.impl;
 
+import ru.course.aston.db.ConnectionManager;
+import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.HeroToFraction;
 import ru.course.aston.repository.HeroToFractionRepository;
 import ru.course.aston.repository.impl.HeroToFractionRepositoryImpl;
@@ -11,7 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeroToFractionServiceImpl implements HeroToFractionService {
-    private HeroToFractionRepository heroToFractionRepository = new HeroToFractionRepositoryImpl();
+    ConnectionManager connectionManager;
+    private HeroToFractionRepository heroToFractionRepository;
+    public HeroToFractionServiceImpl() {
+        connectionManager = new ConnectionManagerImpl();
+        heroToFractionRepository = new HeroToFractionRepositoryImpl();
+    }
+    public HeroToFractionServiceImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        heroToFractionRepository = new HeroToFractionRepositoryImpl(connectionManager);
+    }
 
     @Override
     public HeroToFractionDTO findById(Long id) {

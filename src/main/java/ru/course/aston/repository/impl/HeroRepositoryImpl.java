@@ -4,13 +4,20 @@ import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.repository.HeroRepository;
+import ru.course.aston.repository.HeroToFractionRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HeroRepositoryImpl implements HeroRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
+    private ConnectionManager connectionManager;
+    public HeroRepositoryImpl(){
+    connectionManager = new ConnectionManagerImpl();
+    }
+    public HeroRepositoryImpl(ConnectionManager connectionManager){
+    this.connectionManager = connectionManager;
+    }
 
     @Override
     public Hero findById(Long id) {

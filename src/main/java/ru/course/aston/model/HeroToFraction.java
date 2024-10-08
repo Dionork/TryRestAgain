@@ -2,8 +2,6 @@ package ru.course.aston.model;
 
 import ru.course.aston.repository.FractionRepository;
 import ru.course.aston.repository.HeroRepository;
-import ru.course.aston.repository.impl.FractionRepositoryImpl;
-import ru.course.aston.repository.impl.HeroRepositoryImpl;
 
 import java.util.List;
 
@@ -11,10 +9,10 @@ import java.util.List;
  * Hero to Fraction
  * */
 public class HeroToFraction {
-    private HeroRepository heroRepository = new HeroRepositoryImpl();
-    private FractionRepository fractionRepository = new FractionRepositoryImpl();
-    private List<Fraction> fractions = fractionRepository.findAll();
-    private List<Hero> heroes = heroRepository.findAll();
+    private HeroRepository heroRepository;
+    private FractionRepository fractionRepository;
+    private List<Fraction> fractions ;
+    private List<Hero> heroes ;
     private Long heroToFractionId;
     private Hero hero;
     private Fraction fraction;
@@ -49,11 +47,12 @@ public class HeroToFraction {
         this.fraction = fraction;
     }
 
-    public List<Fraction> getFractionsList() {
-        return fractions;
+
+    public void setHeroes(List<Hero> heroes) {
+        this.heroes = heroes;
     }
 
-    public List<Hero> getHeroesList() {
-        return heroes;
+    public void setFractions(List<Fraction> fractions) {
+        this.fractions = fractions;
     }
 }

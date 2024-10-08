@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Hero;
 import ru.course.aston.model.MaxHP;
 import ru.course.aston.service.HeroService;
@@ -21,8 +22,17 @@ import java.io.PrintWriter;
 
 @WebServlet("/maxhp/*")
 public class MaxHPServlet extends HttpServlet {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final MaxHPService maxHPService = new MaxHPServiceImpl();
+    private final ObjectMapper mapper;
+    private final MaxHPService maxHPService;
+
+    public MaxHPServlet(ConnectionManager connectionManager) {
+        maxHPService = new MaxHPServiceImpl(connectionManager);
+        mapper = new ObjectMapper();
+    }
+    public MaxHPServlet() {
+        maxHPService = new MaxHPServiceImpl();
+        mapper = new ObjectMapper();
+    }
 
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");

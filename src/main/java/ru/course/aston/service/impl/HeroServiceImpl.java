@@ -1,5 +1,6 @@
 package ru.course.aston.service.impl;
 
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Hero;
 import ru.course.aston.repository.HeroRepository;
 import ru.course.aston.repository.impl.HeroRepositoryImpl;
@@ -11,7 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeroServiceImpl implements HeroService {
-    private HeroRepository heroRepository = new HeroRepositoryImpl();
+    private HeroRepository heroRepository;
+    public HeroServiceImpl() {
+        heroRepository = new HeroRepositoryImpl();
+    }
+    public HeroServiceImpl(ConnectionManager connectionManager) {
+        heroRepository = new HeroRepositoryImpl(connectionManager);
+    }
 
     @Override
     public HeroDTO findById(Long id) {

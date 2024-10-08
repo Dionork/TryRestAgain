@@ -2,6 +2,9 @@ package ru.course.aston.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaxHPTest {
@@ -57,5 +60,15 @@ class MaxHPTest {
         Hero hero = new Hero(1L, "Ivan", "Ivanov", 1L);
         MaxHP maxHP = new MaxHP(1L, hero, 1L);
         assertEquals("MaxHP{maxHPId=1, hero=Hero{heroId=1, heroName='Ivan', heroLastName='Ivanov', roleNameId=1}, maxHP=1}", maxHP.toString());
+    }
+
+    @Test
+    void setHeroes() {
+        Hero hero = new Hero(1L, "Ivan", "Ivanov", 1L);
+        List<Hero> heroes = new ArrayList<>();
+        heroes.add(hero);
+        MaxHP maxHP = new MaxHP(1L, hero, 1L);
+        maxHP.setHeroes(heroes);
+        assertEquals(hero, heroes.get(0));
     }
 }

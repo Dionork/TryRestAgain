@@ -1,10 +1,11 @@
 package ru.course.aston.repository;
 
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Fraction;
 
 import java.util.List;
 
-public interface FractionRepository extends Repository<Fraction,Long>{
+public interface FractionRepository extends Repository<Fraction, Long> {
     @Override
     Fraction findById(Long id);
 
@@ -16,6 +17,7 @@ public interface FractionRepository extends Repository<Fraction,Long>{
 
     @Override
     List<Fraction> findAll();
+
     @Override
     void update(Fraction fraction);
 }

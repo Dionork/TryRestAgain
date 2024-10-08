@@ -1,15 +1,15 @@
 package ru.course.aston.service.impl;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
+import ru.course.aston.service.FractionService;
 import ru.course.aston.service.HeroService;
 import ru.course.aston.servlet.dto.HeroDTO;
 
@@ -18,20 +18,31 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class HeroServiceImplTest {
+    static HeroService heroService;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        heroService = new HeroServiceImpl(connectionManager);
+    }
+
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
     }
     @Test
     void findById() {
-        HeroService heroService = new HeroServiceImpl();
         HeroDTO heroDTO = heroService.findById(1L);
         assertEquals(heroDTO.getHeroId(), 1L);
     }
@@ -44,7 +55,6 @@ class HeroServiceImplTest {
                 "Last",
                 2L
         );
-        HeroService heroService = new HeroServiceImpl();
         Long id = heroService.save(heroDTO).getHeroId();
         heroService.deleteById(id);
         assertNull(heroService.findById(id));
@@ -58,7 +68,6 @@ class HeroServiceImplTest {
                 "Last",
                 2L
         );
-        HeroService heroService = new HeroServiceImpl();
         Long id = heroService.save(heroDTO).getHeroId();
         assertEquals(heroService.findById(1L).getHeroId(), 1L);
         heroService.deleteById(id);
@@ -66,7 +75,6 @@ class HeroServiceImplTest {
 
     @Test
     void findAll() {
-        HeroService heroService = new HeroServiceImpl();
         assertEquals(heroService.findAll().size(), 7);
     }
 
@@ -78,10 +86,14 @@ class HeroServiceImplTest {
                 "Огримаров",
                 1L
         );
-        HeroService heroService = new HeroServiceImpl();
         heroService.update(heroDTO);
         assertEquals(heroService.findById(1L).getHeroName(), "Тралл");
 
+    }
+    @Test
+    void constructor() {
+        HeroService heroService = new HeroServiceImpl();
+        assertNotNull(heroService);
     }
 
     @AfterAll

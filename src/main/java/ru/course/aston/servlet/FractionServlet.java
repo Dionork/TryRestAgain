@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.service.FractionService;
 import ru.course.aston.service.impl.FractionServiceImpl;
 import ru.course.aston.servlet.dto.FractionDTO;
@@ -17,9 +18,16 @@ import java.io.PrintWriter;
 
 @WebServlet("/fraction/*")
 public class FractionServlet extends HttpServlet {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final FractionService fractionService = new FractionServiceImpl();
-
+    private final ObjectMapper mapper;
+    private final FractionService fractionService;
+    public FractionServlet() {
+        this.fractionService = new FractionServiceImpl();
+        this.mapper = new ObjectMapper();
+    }
+    public FractionServlet(ConnectionManager connectionManager) {
+        this.fractionService = new FractionServiceImpl(connectionManager);
+        this.mapper = new ObjectMapper();
+    }
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");

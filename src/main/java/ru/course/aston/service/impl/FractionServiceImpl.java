@@ -1,5 +1,6 @@
 package ru.course.aston.service.impl;
 
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.repository.FractionRepository;
 import ru.course.aston.repository.impl.FractionRepositoryImpl;
@@ -11,8 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FractionServiceImpl implements FractionService {
-    private FractionRepository fractionRepository = new FractionRepositoryImpl();
-    private static FractionServiceImpl instance = new FractionServiceImpl();
+    private FractionRepository fractionRepository;
+    public FractionServiceImpl(){
+        fractionRepository = new FractionRepositoryImpl();
+    }
+    public FractionServiceImpl(ConnectionManager connectionManager){
+        fractionRepository = new FractionRepositoryImpl(connectionManager);
+    }
+
 
     @Override
     public FractionDTO findById(Long id) {

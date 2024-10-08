@@ -9,8 +9,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FractionRepositoryImpl implements FractionRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
+public class FractionRepositoryImpl implements FractionRepository  {
+    private ConnectionManager connectionManager;
+    public FractionRepositoryImpl (){
+        connectionManager = new ConnectionManagerImpl();
+    }
+    public FractionRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager ;
+    }
 
     @Override
     public Fraction findById(Long id) {

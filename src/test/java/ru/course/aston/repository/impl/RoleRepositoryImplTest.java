@@ -1,41 +1,43 @@
 package ru.course.aston.repository.impl;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startable;
-import org.testcontainers.lifecycle.Startables;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Role;
 import ru.course.aston.repository.RoleRepository;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 @Testcontainers
 class RoleRepositoryImplTest {
+    static RoleRepository roleRepository;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
-
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        roleRepository = new RoleRepositoryImpl(connectionManager);
     }
 
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
-
-
-    RoleRepository roleRepository = new RoleRepositoryImpl();
+    }
 
     @Test
     void findById() {
@@ -72,6 +74,11 @@ class RoleRepositoryImplTest {
         Optional<Role> result = Optional.ofNullable(roleRepository.findById(role.getRoleNameId()));
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals(role.getRoleName(), result.get().getRoleName());
+    }
+    @Test
+    void constructor() {
+        RoleRepository roleRepository = new RoleRepositoryImpl();
+        Assertions.assertNotNull(roleRepository);
     }
     @AfterAll
     public static void stopContainer() {

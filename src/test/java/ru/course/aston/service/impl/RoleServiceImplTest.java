@@ -1,15 +1,15 @@
 package ru.course.aston.service.impl;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
+import ru.course.aston.service.MaxHPService;
 import ru.course.aston.service.RoleService;
 import ru.course.aston.servlet.dto.RoleDTO;
 
@@ -18,21 +18,30 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class RoleServiceImplTest {
+    static RoleService roleService;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
-
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        roleService = new RoleServiceImpl(connectionManager);
     }
 
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
+    }
     @Test
     void findById() {
-        RoleService roleService = new RoleServiceImpl();
         roleService.findById(1L);
         assertEquals(roleService.findById(1L).getRoleName(),"Воин");
     }
@@ -40,7 +49,6 @@ class RoleServiceImplTest {
     @Test
     void deleteById() {
         RoleDTO roleDTO = new RoleDTO(1L,"newRole");
-        RoleServiceImpl roleService = new RoleServiceImpl();
         Long id = roleService.save(roleDTO).getRoleNameId();
         roleService.deleteById(id);
         assertEquals(roleService.findById(id), null);
@@ -49,7 +57,6 @@ class RoleServiceImplTest {
     @Test
     void save() {
         RoleDTO roleDTO = new RoleDTO(1L,"newRole");
-        RoleServiceImpl roleService = new RoleServiceImpl();
         Long id = roleService.save(roleDTO).getRoleNameId();
         assertEquals(roleService.findById(id).getRoleName(),"newRole");
         roleService.deleteById(id);
@@ -57,7 +64,6 @@ class RoleServiceImplTest {
 
     @Test
     void findAll() {
-        RoleService roleService = new RoleServiceImpl();
         roleService.findAll();
         assertEquals(roleService.findAll().size(), 3);
     }
@@ -65,9 +71,13 @@ class RoleServiceImplTest {
     @Test
     void update() {
         RoleDTO roleDTO = new RoleDTO(1L,"Воин");
-        RoleServiceImpl roleService = new RoleServiceImpl();
         roleService.update(roleDTO);
         assertEquals(roleService.findById(1L).getRoleName(),roleDTO.getRoleName());
+    }
+    @Test
+    void constructor() {
+        RoleService roleService = new RoleServiceImpl();
+        assertNotNull(roleService);
     }
 
     @AfterAll

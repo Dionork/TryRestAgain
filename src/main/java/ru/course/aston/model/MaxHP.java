@@ -1,7 +1,7 @@
 package ru.course.aston.model;
 
 import ru.course.aston.repository.HeroRepository;
-import ru.course.aston.repository.impl.HeroRepositoryImpl;
+
 
 import java.util.*;
 
@@ -10,11 +10,11 @@ import java.util.*;
  * hero to maxHP
  */
 public class MaxHP {
-    private HeroRepository heroRepository = new HeroRepositoryImpl();
+    private HeroRepository heroRepository;
     private Long maxHPId;
     private Hero hero;
     private Long maxHP;
-    private List<Hero> heroes = heroRepository.findAll();
+    private List<Hero> heroes;
 
     public MaxHP(Long maxHPId, Hero hero, Long maxHP) {
         this.maxHPId = maxHPId;
@@ -46,8 +46,8 @@ public class MaxHP {
         this.maxHP = maxHP;
     }
 
-    public List<Hero>getHeroesList() {
-        return heroes;
+    public void setHeroes(List<Hero> heroes) {
+        this.heroes = heroes;
     }
 
     @Override

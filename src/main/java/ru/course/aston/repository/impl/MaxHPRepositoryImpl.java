@@ -13,8 +13,16 @@ import java.util.List;
 
 
 public class MaxHPRepositoryImpl implements MaxHPRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
-    private HeroRepository heroRepository = new HeroRepositoryImpl();
+    private ConnectionManager connectionManager;
+    private HeroRepository heroRepository;
+    public MaxHPRepositoryImpl() {
+        connectionManager = new ConnectionManagerImpl();
+        heroRepository = new HeroRepositoryImpl();
+    }
+    public MaxHPRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.heroRepository = new HeroRepositoryImpl(connectionManager);
+    }
 
     @Override
     public MaxHP findById(Long id) {

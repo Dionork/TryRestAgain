@@ -1,5 +1,6 @@
 package ru.course.aston.service.impl;
 
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Role;
 import ru.course.aston.repository.RoleRepository;
 import ru.course.aston.repository.impl.RoleRepositoryImpl;
@@ -11,7 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleServiceImpl implements RoleService {
-    private RoleRepository roleRepository = new RoleRepositoryImpl();
+    private RoleRepository roleRepository;
+    public RoleServiceImpl(){
+        roleRepository = new RoleRepositoryImpl();
+    }
+    public RoleServiceImpl(ConnectionManager connectionManager) {
+        roleRepository = new RoleRepositoryImpl(connectionManager);
+    }
 
     @Override
     public RoleDTO findById(Long id) {

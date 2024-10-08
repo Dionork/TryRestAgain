@@ -1,16 +1,16 @@
 package ru.course.aston.service.impl;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
+import ru.course.aston.service.FractionService;
 import ru.course.aston.service.MaxHPService;
 import ru.course.aston.servlet.dto.MaxHPDTO;
 
@@ -19,22 +19,33 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class MaxHPServiceImplTest {
+    static MaxHPService maxHPService;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        maxHPService = new MaxHPServiceImpl(connectionManager);
+    }
+
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
     }
     @Test
     void findById() {
-        MaxHPService service = new MaxHPServiceImpl();
-        service.findById(1L);
-        assertEquals(1L, service.findById(1L).getMaxHPId());
+        maxHPService.findById(1L);
+        assertEquals(1L, maxHPService.findById(1L).getMaxHPId());
     }
 
     @Test
@@ -44,10 +55,9 @@ class MaxHPServiceImplTest {
                 "Ветрокрылова",
                 3L);
         MaxHPDTO maxHPDTO = new MaxHPDTO(2L,hero,2222000L);
-        MaxHPService service = new MaxHPServiceImpl();
-        Long id = service.save(maxHPDTO).getMaxHPId();
-        service.deleteById(id);
-        assertNull(service.findById(id));
+        Long id = maxHPService.save(maxHPDTO).getMaxHPId();
+        maxHPService.deleteById(id);
+        assertNull(maxHPService.findById(id));
     }
 
     @Test
@@ -57,17 +67,15 @@ class MaxHPServiceImplTest {
                 "Ветрокрылова",
                 3L);
         MaxHPDTO maxHPDTO = new MaxHPDTO(2L,hero,2222000L);
-        MaxHPService service = new MaxHPServiceImpl();
-        Long id = service.save(maxHPDTO).getMaxHPId();
-        assertEquals(2222000L, service.findById(id).getMaxHP());
-        service.deleteById(id);
+        Long id = maxHPService.save(maxHPDTO).getMaxHPId();
+        assertEquals(2222000L, maxHPService.findById(id).getMaxHP());
+        maxHPService.deleteById(id);
     }
 
     @Test
     void findAll() {
-        MaxHPService service = new MaxHPServiceImpl();
-        service.findAll();
-        assertEquals(1L, service.findAll().get(0).getMaxHPId());
+        maxHPService.findAll();
+        assertEquals(1L, maxHPService.findAll().get(0).getMaxHPId());
     }
 
     @Test
@@ -77,11 +85,14 @@ class MaxHPServiceImplTest {
                 "Ветрокрылова",
                 3L);
         MaxHPDTO maxHPDTO = new MaxHPDTO(2L,hero,22220L);
-        MaxHPService service = new MaxHPServiceImpl();
-        service.update(maxHPDTO);
-        assertEquals(22220L, service.findById(2L).getMaxHP());
+        maxHPService.update(maxHPDTO);
+        assertEquals(22220L, maxHPService.findById(2L).getMaxHP());
     }
-
+@Test
+void constructor() {
+        MaxHPService maxHPService = new MaxHPServiceImpl();
+        assertNotNull(maxHPService);
+}
     @AfterAll
     public static void stopContainer() {
         System.out.println("Стоп контейнера");

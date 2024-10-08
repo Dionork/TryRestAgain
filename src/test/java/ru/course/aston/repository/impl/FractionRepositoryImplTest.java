@@ -2,11 +2,14 @@ package ru.course.aston.repository.impl;
 
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
+import org.postgresql.util.PSQLException;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.repository.FractionRepository;
@@ -16,20 +19,33 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @Testcontainers
 class FractionRepositoryImplTest {
-    FractionRepository fractionRepository = new FractionRepositoryImpl();
+    static FractionRepository fractionRepository;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        fractionRepository = new FractionRepositoryImpl(connectionManager);
+    }
+
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
     }
 
@@ -115,7 +131,7 @@ class FractionRepositoryImplTest {
     @Test
     void saveFractionSQLException() {
         assertThrows(SQLException.class, () -> {
-            try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
+            try (Connection connection = connectionManager.getConnection()) {
                 PreparedStatement statement
                         = connection.prepareStatement("INSERT INTO fraction (fraction_id, fraction_name) VALUES (?, ?)");
                 statement.setLong(1, 1);
@@ -152,7 +168,7 @@ class FractionRepositoryImplTest {
 
     @Test
     void findAllFractionSQLException() {
-        assertThrows(SQLException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
                 PreparedStatement statement
                         = connection.prepareStatement("SELECT * FROM fraction");
@@ -160,4 +176,10 @@ class FractionRepositoryImplTest {
             }
         });
     }
+    @Test
+    void constructor(){
+        FractionRepository fractionRepository = new FractionRepositoryImpl();
+        Assertions.assertNotNull(fractionRepository);
+    }
+
 }

@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.service.RoleService;
 import ru.course.aston.service.impl.RoleServiceImpl;
 import ru.course.aston.servlet.dto.RoleDTO;
@@ -16,8 +17,17 @@ import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = {"/role/*"})
 public class RoleServlet extends HttpServlet {
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final RoleService roleService = new RoleServiceImpl();
+    private final ObjectMapper mapper;
+    private final RoleService roleService;
+
+    public RoleServlet(ConnectionManager connectionManager) {
+        mapper = new ObjectMapper();
+        roleService = new RoleServiceImpl(connectionManager);
+    }
+    public RoleServlet() {
+        mapper = new ObjectMapper();
+        roleService = new RoleServiceImpl();
+    }
 
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
@@ -40,8 +50,7 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
-            e.getMessage();
-            respAnswer = "Ошибка";
+            respAnswer = e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();
@@ -66,8 +75,7 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); //Успешно}
             }
         } catch (Exception e) {
-            e.getMessage();
-            respAnswer = "Ошибка";
+            respAnswer =e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();
@@ -94,8 +102,7 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         } catch (Exception e) {
-            e.getMessage();
-            respAnswer = "Ошибка";
+            respAnswer = e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();
@@ -120,8 +127,7 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         } catch (Exception e) {
-            e.getMessage();
-            respAnswer = "Ошибка";
+            respAnswer =e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();

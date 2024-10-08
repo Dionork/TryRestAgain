@@ -14,9 +14,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
-    HeroRepository heroRepository = new HeroRepositoryImpl();
-    FractionRepository fractionRepository = new FractionRepositoryImpl();
+    private ConnectionManager connectionManager;
+    HeroRepository heroRepository;
+    FractionRepository fractionRepository;
+    HeroToFraction heroToFraction;
+    public HeroToFractionRepositoryImpl() {
+        connectionManager = new ConnectionManagerImpl();
+        this.fractionRepository = new FractionRepositoryImpl();
+        this.heroRepository = new HeroRepositoryImpl();
+    }
+    public HeroToFractionRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+        this.fractionRepository = new FractionRepositoryImpl(connectionManager);
+        this.heroRepository = new HeroRepositoryImpl(connectionManager);
+    }
 
     @Override
     public HeroToFraction findById(Long id) {
@@ -30,10 +41,11 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             if (resultSet.next()) {
                 Hero hero = heroRepository.findById(resultSet.getLong("hero_id"));
                 Fraction fraction = fractionRepository.findById(resultSet.getLong("fraction_id"));
-                return new HeroToFraction(
+                heroToFraction = new HeroToFraction(
                         resultSet.getLong("heroes_fraction_id"),
                         hero,
                         fraction);
+                return heroToFraction;
 
             }
 
@@ -74,13 +86,17 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
             Fraction fraction = fractionRepository.findById(heroToFraction.getFraction().getFractionId());
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
+
                 heroToFraction = new HeroToFraction(
                         generatedKeys.getLong(1),
                         hero,
                         fraction
                 );
+                this.heroToFraction = heroToFraction;
+                this.heroToFraction.setHeroes(heroRepository.findAll());
+                this.heroToFraction.setFractions(fractionRepository.findAll());
             }
-            return heroToFraction;
+            return this.heroToFraction;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -91,7 +107,7 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
         List<HeroToFraction> HeroToFractionList = new ArrayList<>();
         String sql = "SELECT * FROM wow_db.heroes_fractions";
         try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 HeroToFractionList.add(new HeroToFraction(

@@ -10,7 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleRepositoryImpl implements RoleRepository {
-    private ConnectionManager connectionManager = new ConnectionManagerImpl().getInstance();
+    private ConnectionManager connectionManager;
+    public RoleRepositoryImpl() {
+        connectionManager = new ConnectionManagerImpl();
+    }
+    public RoleRepositoryImpl(ConnectionManager connectionManager) {
+        this.connectionManager = connectionManager;
+    }
     @Override
     public Role findById(Long id) {
         String sql = "SELECT * FROM wow_db.roles WHERE role_name_id = " + id;

@@ -1,32 +1,42 @@
 package ru.course.aston.repository.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startables;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.model.MaxHP;
 import ru.course.aston.repository.MaxHPRepository;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 @Testcontainers
 class MaxHPRepositoryImplTest {
-    MaxHPRepository maxHPRepository = new MaxHPRepositoryImpl();
+    static MaxHPRepository maxHPRepository;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        maxHPRepository = new MaxHPRepositoryImpl(connectionManager);
+    }
+
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
     }
 
@@ -82,6 +92,11 @@ class MaxHPRepositoryImplTest {
         Assertions.assertEquals(maxHP.getMaxHP(), result.get().getMaxHP()
         );
 
+    }
+    @Test
+    void constructor() {
+        MaxHPRepository maxHPRepository = new MaxHPRepositoryImpl();
+        Assertions.assertNotNull(maxHPRepository);
     }
 
     @AfterAll

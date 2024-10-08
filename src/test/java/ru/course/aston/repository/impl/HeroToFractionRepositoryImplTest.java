@@ -1,11 +1,12 @@
 package ru.course.aston.repository.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
+import org.postgresql.util.PSQLException;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.ext.ScriptUtils;
+import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startables;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Fraction;
@@ -22,16 +23,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Testcontainers
 class HeroToFractionRepositoryImplTest {
-    HeroToFractionRepository heroToFractionRepository = new HeroToFractionRepositoryImpl();
+    static HeroToFractionRepository heroToFractionRepository;
+    static ConnectionManager connectionManager;
+    private static JdbcDatabaseDelegate jdbcDatabaseDelegate;
     @Container
-    public static final GenericContainer<?> container = new PostgreSQLContainer<>("postgres:14-alpine")
-//         .withCommand("docker-compose up docker run -p 8080:8080 tryrestagain");
-            .withInitScript("sql/schema.sql");
+    public static final PostgreSQLContainer container = new PostgreSQLContainer<>("postgres:14-alpine");
 
     @BeforeAll
     public static void startContainer() {
-        System.out.println("Старт контейнера");
         container.start();
+        connectionManager = new ConnectionManagerImpl();
+        connectionManager.setDriver(container.getDriverClassName());
+        connectionManager.setJdbcUrl(container.getJdbcUrl());
+        connectionManager.setUsername(container.getUsername());
+        connectionManager.setPassword(container.getPassword());
+        jdbcDatabaseDelegate = new JdbcDatabaseDelegate(container, "");
+        heroToFractionRepository = new HeroToFractionRepositoryImpl(connectionManager);
+    }
+
+    @BeforeEach
+    public void initSchema() {
+        ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
 
     }
 
@@ -51,8 +63,8 @@ class HeroToFractionRepositoryImplTest {
 
     @Test
     void save() {
-        Hero hero = new Hero(4L, "Артас", "HeroLastName", 1L);
-        Fraction fraction = new Fraction(2L, "Орда");
+        Hero hero = new Hero(4L, "Сильвана", "HeroLastName", 1L);
+        Fraction fraction = new Fraction(2L, "Альянс");
         HeroToFraction heroToFraction = new HeroToFraction(2L, hero, fraction);
         Long id = heroToFractionRepository.save(heroToFraction).getHeroToFractionId();
         Optional<HeroToFraction> result = Optional.ofNullable(heroToFractionRepository.findById(fraction.getFractionId()));
@@ -106,7 +118,7 @@ class HeroToFractionRepositoryImplTest {
 
     @Test
     void updateHeroToFractionSQLException() {
-        assertThrows(SQLException.class, () -> {
+        assertThrows(PSQLException.class, () -> {
             try (Connection connection = ConnectionManagerImpl.getInstance().getConnection()) {
                 PreparedStatement statement = connection.prepareStatement("UPDATE hero_to_fraction SET fraction_id = ? WHERE hero_to_fraction_id = ?");
                 statement.setLong(1, 1L);
@@ -214,5 +226,9 @@ class HeroToFractionRepositoryImplTest {
             heroToFractionRepository.update(null);
         });
     }
-
+@Test
+    void constructor(){
+        HeroToFractionRepository heroToFractionRepository = new HeroToFractionRepositoryImpl();
+        Assertions.assertNotNull(heroToFractionRepository);
+}
 }

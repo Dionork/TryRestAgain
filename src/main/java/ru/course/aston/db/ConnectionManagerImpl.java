@@ -8,10 +8,10 @@ import java.sql.SQLException;
 
 
 public class ConnectionManagerImpl implements ConnectionManager {
-    static String driver = "db.driver-class-name";
-    String url = "db.url";
-    String user = "db.username";
-    String password = "db.password";
+    static String driver;
+    String url;
+    String user;
+    String password;
     private static ConnectionManager instance;
 
     public static ConnectionManager getInstance() {
@@ -25,27 +25,85 @@ public class ConnectionManagerImpl implements ConnectionManager {
 
     @Override
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(PropertiesUtils.getProperty(url),
-                PropertiesUtils.getProperty(user),
-                PropertiesUtils.getProperty(password));
-
+        if (url != null && user != null && password != null) {
+            return DriverManager.getConnection((url),
+                    (user),
+                    (password));
+        } else {
+            return DriverManager.getConnection(PropertiesUtils.getProperty("db.url"),
+                    PropertiesUtils.getProperty("db.username"),
+                    PropertiesUtils.getProperty("db.password"));
+        }
     }
 
     @Override
     public void closeConnection() {
-        ConnectionManager connectionManager = ConnectionManagerImpl.getInstance();
         try {
-            System.out.println("Закрытие соединения");
-            connectionManager.getConnection().close();
+            if (url != null && user != null && password != null) {
+                DriverManager.getConnection((url),
+                        (user),
+                        (password)).close();
+            }
+            else {
+            DriverManager.getConnection(PropertiesUtils.getProperty("db.url"),
+                    PropertiesUtils.getProperty("db.username"),
+                    PropertiesUtils.getProperty("db.password")).close();}
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
     private static void loadDriver() {
         try {
-            Class.forName(PropertiesUtils.getProperty(driver));
+            if (driver == null) {
+                Class.forName(driver);
+
+            } else {
+                Class.forName(PropertiesUtils.getProperty("org.postgresql.Driver"));
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void setJdbcUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public void setUsername(String user) {
+        this.user = user;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public String getJdbcUrl() {
+        return url;
+    }
+
+    @Override
+    public String getUsername() {
+        return user;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getDriver() {
+        return driver;
     }
 }
