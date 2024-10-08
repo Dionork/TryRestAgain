@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
-import ru.course.aston.model.Hero;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,6 +23,7 @@ import java.io.PrintWriter;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
 class HeroServletTest {
@@ -89,7 +89,7 @@ class HeroServletTest {
     }
 
     @Test
-    void doPostBadRequest() throws IOException, ServletException  {
+    void doPostBadRequest() throws IOException, ServletException {
         String path = "hero/qwe";
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
@@ -111,7 +111,7 @@ class HeroServletTest {
     }
 
     @Test
-    void doDeleteBadRequest() throws IOException, ServletException  {
+    void doDeleteBadRequest() throws IOException, ServletException {
         String path = "hero/qwe";
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
@@ -120,9 +120,10 @@ class HeroServletTest {
         heroServlet.doDelete(request, response);
         verify(response).setStatus(400);
     }
+
     @Test
     void constructor() {
-        HeroServlet heroServlet = new HeroServlet();
-        assertNotNull(heroServlet);
+        HeroServlet servlet = new HeroServlet();
+        assertNotNull(servlet);
     }
 }

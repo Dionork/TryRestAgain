@@ -1,7 +1,6 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
@@ -11,13 +10,8 @@ import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Fraction;
 import ru.course.aston.model.Hero;
-import ru.course.aston.model.HeroToFraction;
-import ru.course.aston.repository.FractionRepository;
-import ru.course.aston.repository.impl.FractionRepositoryImpl;
 import ru.course.aston.service.HeroToFractionService;
 import ru.course.aston.servlet.dto.HeroToFractionDTO;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,7 +67,7 @@ class HeroToFractionServiceImplTest {
                 hero
                 , fraction);
         Long id = service.save(heroToFractionDTOd).getHeroToFractionId();
-        assertEquals(heroToFractionDTOd.getHeroToFractionId(), 1L);
+        assertEquals(1L,heroToFractionDTOd.getHeroToFractionId() );
         service.deleteById(id);
     }
 
@@ -90,7 +84,7 @@ class HeroToFractionServiceImplTest {
                 hero
                 , fraction);
         service.update(heroToFractionDTOd);
-        assertEquals(heroToFractionDTOd.getHeroToFractionId(), 1L);
+        assertEquals(1L,heroToFractionDTOd.getHeroToFractionId() );
     }
     @Test
     void constructor() {

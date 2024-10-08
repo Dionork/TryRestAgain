@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FractionRepositoryImpl implements FractionRepository  {
-    private ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
     public FractionRepositoryImpl (){
         connectionManager = new ConnectionManagerImpl();
     }
@@ -25,7 +25,7 @@ public class FractionRepositoryImpl implements FractionRepository  {
             throw new NullPointerException();
         }
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 return new Fraction(resultSet.getLong("fraction_id"),
@@ -53,7 +53,7 @@ public class FractionRepositoryImpl implements FractionRepository  {
     public Fraction save(Fraction fraction) {
         String sql = "INSERT INTO wow_db.fractions (fraction_name) VALUES (?)";
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, fraction.getFractionName());
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();

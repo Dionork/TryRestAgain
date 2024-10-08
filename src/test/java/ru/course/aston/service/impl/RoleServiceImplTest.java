@@ -1,7 +1,6 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
@@ -9,13 +8,11 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
-import ru.course.aston.service.MaxHPService;
 import ru.course.aston.service.RoleService;
 import ru.course.aston.servlet.dto.RoleDTO;
 
-import java.sql.SQLException;
-
 import static org.junit.jupiter.api.Assertions.*;
+
 @Testcontainers
 class RoleServiceImplTest {
     static RoleService roleService;
@@ -40,44 +37,46 @@ class RoleServiceImplTest {
     public void initSchema() {
         ScriptUtils.runInitScript(jdbcDatabaseDelegate, "sql/schema.sql");
     }
+
     @Test
     void findById() {
         roleService.findById(1L);
-        assertEquals(roleService.findById(1L).getRoleName(),"Воин");
+        assertEquals("Воин", roleService.findById(1L).getRoleName());
     }
 
     @Test
     void deleteById() {
-        RoleDTO roleDTO = new RoleDTO(1L,"newRole");
+        RoleDTO roleDTO = new RoleDTO(1L, "newRole");
         Long id = roleService.save(roleDTO).getRoleNameId();
         roleService.deleteById(id);
-        assertEquals(roleService.findById(id), null);
+        assertNull(roleService.findById(id));
     }
 
     @Test
     void save() {
-        RoleDTO roleDTO = new RoleDTO(1L,"newRole");
+        RoleDTO roleDTO = new RoleDTO(1L, "newRole");
         Long id = roleService.save(roleDTO).getRoleNameId();
-        assertEquals(roleService.findById(id).getRoleName(),"newRole");
+        assertEquals("newRole", roleService.findById(id).getRoleName());
         roleService.deleteById(id);
     }
 
     @Test
     void findAll() {
         roleService.findAll();
-        assertEquals(roleService.findAll().size(), 3);
+        assertEquals(3, roleService.findAll().size());
     }
 
     @Test
     void update() {
-        RoleDTO roleDTO = new RoleDTO(1L,"Воин");
+        RoleDTO roleDTO = new RoleDTO(1L, "Воин");
         roleService.update(roleDTO);
-        assertEquals(roleService.findById(1L).getRoleName(),roleDTO.getRoleName());
+        assertEquals(roleService.findById(1L).getRoleName(), roleDTO.getRoleName());
     }
+
     @Test
     void constructor() {
-        RoleService roleService = new RoleServiceImpl();
-        assertNotNull(roleService);
+        RoleService service = new RoleServiceImpl();
+        assertNotNull(service);
     }
 
     @AfterAll

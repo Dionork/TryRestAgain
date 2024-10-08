@@ -1,7 +1,6 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
@@ -10,11 +9,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
-import ru.course.aston.service.FractionService;
 import ru.course.aston.service.MaxHPService;
 import ru.course.aston.servlet.dto.MaxHPDTO;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
@@ -90,8 +86,8 @@ class MaxHPServiceImplTest {
     }
 @Test
 void constructor() {
-        MaxHPService maxHPService = new MaxHPServiceImpl();
-        assertNotNull(maxHPService);
+        MaxHPService service = new MaxHPServiceImpl();
+        assertNotNull(service);
 }
     @AfterAll
     public static void stopContainer() {

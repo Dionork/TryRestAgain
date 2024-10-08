@@ -22,8 +22,6 @@ import ru.course.aston.servlet.mapper.FractionMapper;
 import ru.course.aston.servlet.mapper.HeroMapper;
 import ru.course.aston.servlet.mapper.HeroToFractionMapper;
 
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -31,8 +29,8 @@ import java.io.PrintWriter;
 public class HeroToFractionServlet extends HttpServlet {
     private final ObjectMapper mapper;
     private final HeroToFractionService heroToFractionService;
-    private HeroService heroService ;
-    private FractionService fractionService;
+    private final HeroService heroService;
+    private final FractionService fractionService;
 
     public HeroToFractionServlet(ConnectionManager connectionManager) {
         heroToFractionService = new HeroToFractionServiceImpl(connectionManager);
@@ -40,12 +38,14 @@ public class HeroToFractionServlet extends HttpServlet {
         fractionService = new FractionServiceImpl(connectionManager);
         mapper = new ObjectMapper();
     }
+
     public HeroToFractionServlet() {
         heroToFractionService = new HeroToFractionServiceImpl();
         heroService = new HeroServiceImpl();
         fractionService = new FractionServiceImpl();
         mapper = new ObjectMapper();
     }
+
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
@@ -76,7 +76,7 @@ public class HeroToFractionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -105,7 +105,7 @@ public class HeroToFractionServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -136,7 +136,7 @@ public class HeroToFractionServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("delete".equals(path[1])) {

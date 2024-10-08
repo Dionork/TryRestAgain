@@ -1,25 +1,14 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.lifecycle.Startables;
-import ru.course.aston.Main;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
-import ru.course.aston.repository.FractionRepository;
-import ru.course.aston.repository.impl.FractionRepositoryImpl;
 import ru.course.aston.service.FractionService;
 import ru.course.aston.servlet.dto.FractionDTO;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,7 +41,7 @@ class FractionServiceImplTest {
     @Test
     void findById() {
         FractionDTO fractionDTO = fractionService.findById(1L);
-        assertEquals(fractionDTO.getFractionId(), 1L);
+        assertEquals(1L,fractionDTO.getFractionId());
     }
 
     @Test
@@ -60,7 +49,7 @@ class FractionServiceImplTest {
         FractionDTO fractionDTO = new FractionDTO(1L, "newFraction");
         Long id = fractionService.save(fractionDTO).getFractionId();
         fractionService.deleteById(id);
-        assertEquals(fractionService.findById(id), null);
+        assertNull(fractionService.findById(id));
 
     }
 
@@ -68,7 +57,7 @@ class FractionServiceImplTest {
     void save() {
         FractionDTO fractionDTO = new FractionDTO(1L, "newFraction");
         Long id = fractionService.save(fractionDTO).getFractionId();
-        assertEquals(fractionService.findById(id).getFractionName(), "newFraction");
+        assertEquals("newFraction",fractionService.findById(id).getFractionName() );
         fractionService.deleteById(id);
 
 
@@ -76,22 +65,22 @@ class FractionServiceImplTest {
 
     @Test
     void findAll() {
-        assertEquals(fractionService.findAll().size(), 2);
+        assertEquals(2,fractionService.findAll().size() );
     }
 
     @Test
     void update() {
         FractionDTO fractionDTO = new FractionDTO(1L, "newFraction");
         fractionService.update(fractionDTO);
-        assertEquals(fractionDTO.getFractionId(), 1L);
+        assertEquals(1L,fractionDTO.getFractionId());
         fractionDTO.setFractionName("Aльянс");
         fractionService.update(fractionDTO);
     }
 
     @Test
     void constructor() {
-        FractionServiceImpl fractionServiceImpl = new FractionServiceImpl();
-        assertNotNull(fractionServiceImpl);
+        FractionService service = new FractionServiceImpl();
+        assertNotNull(service);
     }
 
     @AfterAll

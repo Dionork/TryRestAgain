@@ -120,7 +120,7 @@ class MaxHPServletTest {
     }
     @Test
     void constructor() {
-        MaxHPServlet maxHPServlet = new MaxHPServlet();
-        assertNotNull(maxHPServlet);
+        MaxHPServlet servlet = new MaxHPServlet();
+        assertNotNull(servlet);
     }
 }

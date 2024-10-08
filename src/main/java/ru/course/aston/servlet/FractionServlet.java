@@ -10,9 +10,7 @@ import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.service.FractionService;
 import ru.course.aston.service.impl.FractionServiceImpl;
 import ru.course.aston.servlet.dto.FractionDTO;
-import ru.course.aston.servlet.dto.RoleDTO;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -20,18 +18,22 @@ import java.io.PrintWriter;
 public class FractionServlet extends HttpServlet {
     private final ObjectMapper mapper;
     private final FractionService fractionService;
+
     public FractionServlet() {
         this.fractionService = new FractionServiceImpl();
         this.mapper = new ObjectMapper();
     }
+
     public FractionServlet(ConnectionManager connectionManager) {
         this.fractionService = new FractionServiceImpl(connectionManager);
         this.mapper = new ObjectMapper();
     }
+
     private void setJsonHeader(HttpServletResponse resp) {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
+
     @Override
     //Запрос на сервлет
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,7 +64,7 @@ public class FractionServlet extends HttpServlet {
     //Изменение объекта
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setJsonHeader(resp);
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("update".equals(path[1])) {
@@ -89,7 +91,7 @@ public class FractionServlet extends HttpServlet {
     @Override
     //Новый объект
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -117,7 +119,7 @@ public class FractionServlet extends HttpServlet {
     //Удаление объекта
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("delete".equals(path[1])) {

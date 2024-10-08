@@ -11,7 +11,6 @@ import ru.course.aston.service.RoleService;
 import ru.course.aston.service.impl.RoleServiceImpl;
 import ru.course.aston.servlet.dto.RoleDTO;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -24,6 +23,7 @@ public class RoleServlet extends HttpServlet {
         mapper = new ObjectMapper();
         roleService = new RoleServiceImpl(connectionManager);
     }
+
     public RoleServlet() {
         mapper = new ObjectMapper();
         roleService = new RoleServiceImpl();
@@ -61,7 +61,7 @@ public class RoleServlet extends HttpServlet {
     @Override
     //Изменение объекта
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("update".equals(path[1])) {
@@ -72,10 +72,10 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_OK); //Успешно
             } else {
                 respAnswer = "Ошибка запроса";
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST); //Успешно}
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         } catch (Exception e) {
-            respAnswer =e.getMessage();
+            respAnswer = e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();
@@ -87,7 +87,7 @@ public class RoleServlet extends HttpServlet {
     @Override
     //Новый объект
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -114,7 +114,7 @@ public class RoleServlet extends HttpServlet {
     //Удаление объекта
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("delete".equals(path[1])) {
@@ -127,7 +127,7 @@ public class RoleServlet extends HttpServlet {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         } catch (Exception e) {
-            respAnswer =e.getMessage();
+            respAnswer = e.getMessage();
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         PrintWriter out = resp.getWriter();

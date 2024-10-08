@@ -121,7 +121,7 @@ class HeroToFractionServletTest {
     }
     @Test
     void constructor() {
-        HeroToFractionServlet heroToFractionServlet = new HeroToFractionServlet();
-        assertNotNull(heroToFractionServlet);
+        HeroToFractionServlet servlet = new HeroToFractionServlet();
+        assertNotNull(servlet);
     }
 }

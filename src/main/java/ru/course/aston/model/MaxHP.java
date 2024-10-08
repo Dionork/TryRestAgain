@@ -1,8 +1,5 @@
 package ru.course.aston.model;
 
-import ru.course.aston.repository.HeroRepository;
-
-
 import java.util.*;
 
 /**
@@ -10,7 +7,6 @@ import java.util.*;
  * hero to maxHP
  */
 public class MaxHP {
-    private HeroRepository heroRepository;
     private Long maxHPId;
     private Hero hero;
     private Long maxHP;

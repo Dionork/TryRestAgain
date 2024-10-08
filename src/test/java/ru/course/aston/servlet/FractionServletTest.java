@@ -121,7 +121,7 @@ class FractionServletTest {
     }
     @Test
     void constructor() {
-        FractionServlet fractionServlet = new FractionServlet();
-        assertNotNull(fractionServlet);
+        FractionServlet servlet = new FractionServlet();
+        assertNotNull(servlet);
     }
 }

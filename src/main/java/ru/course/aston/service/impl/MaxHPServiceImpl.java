@@ -1,7 +1,6 @@
 package ru.course.aston.service.impl;
 
 import ru.course.aston.db.ConnectionManager;
-import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.MaxHP;
 
 import ru.course.aston.repository.MaxHPRepository;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaxHPServiceImpl implements MaxHPService {
-    private MaxHPRepository maxHPRepository;
+    private final MaxHPRepository maxHPRepository;
     public MaxHPServiceImpl() {
         maxHPRepository = new MaxHPRepositoryImpl();
     }

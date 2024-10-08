@@ -16,7 +16,6 @@ import ru.course.aston.service.impl.MaxHPServiceImpl;
 import ru.course.aston.servlet.mapper.HeroMapper;
 import ru.course.aston.servlet.mapper.MaxHPMapper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -29,6 +28,7 @@ public class MaxHPServlet extends HttpServlet {
         maxHPService = new MaxHPServiceImpl(connectionManager);
         mapper = new ObjectMapper();
     }
+
     public MaxHPServlet() {
         maxHPService = new MaxHPServiceImpl();
         mapper = new ObjectMapper();
@@ -38,6 +38,7 @@ public class MaxHPServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
     }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         setJsonHeader(resp);
@@ -63,7 +64,7 @@ public class MaxHPServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -73,7 +74,7 @@ public class MaxHPServlet extends HttpServlet {
                 String heroId = req.getParameter("heroId");
                 HeroService heroService = new HeroServiceImpl();
                 Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
-                MaxHP maxHP = new MaxHP(Long.parseLong(id),hero, Long.parseLong(hp));
+                MaxHP maxHP = new MaxHP(Long.parseLong(id), hero, Long.parseLong(hp));
                 maxHPService.update(MaxHPMapper.INSTANCE.toDTO(maxHP));
                 respAnswer = "Изменено";
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -92,7 +93,7 @@ public class MaxHPServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -102,7 +103,7 @@ public class MaxHPServlet extends HttpServlet {
                 String heroId = req.getParameter("heroId");
                 HeroService heroService = new HeroServiceImpl();
                 Hero hero = HeroMapper.INSTANCE.toModel(heroService.findById(Long.parseLong(heroId)));
-                MaxHP maxHP = new MaxHP(Long.parseLong(id),hero, Long.parseLong(hp));
+                MaxHP maxHP = new MaxHP(Long.parseLong(id), hero, Long.parseLong(hp));
                 maxHPService.save(MaxHPMapper.INSTANCE.toDTO(maxHP));
                 respAnswer = "Добавлено";
                 resp.setStatus(HttpServletResponse.SC_OK);
@@ -123,7 +124,7 @@ public class MaxHPServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("delete".equals(path[1])) {

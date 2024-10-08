@@ -18,7 +18,6 @@ public class ConnectionManagerImpl implements ConnectionManager {
         if (instance == null) {
             instance = new ConnectionManagerImpl();
             loadDriver();
-            System.out.println("Новое соединение");
         }
         return instance;
     }
@@ -62,7 +61,7 @@ public class ConnectionManagerImpl implements ConnectionManager {
                 Class.forName(PropertiesUtils.getProperty("org.postgresql.Driver"));
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 

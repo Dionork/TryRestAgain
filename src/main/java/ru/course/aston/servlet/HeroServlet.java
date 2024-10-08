@@ -8,13 +8,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.model.Hero;
-import ru.course.aston.model.MaxHP;
 import ru.course.aston.service.HeroService;
 import ru.course.aston.service.impl.HeroServiceImpl;
 import ru.course.aston.servlet.mapper.HeroMapper;
-import ru.course.aston.servlet.mapper.MaxHPMapper;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -62,7 +59,7 @@ public class HeroServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -93,7 +90,7 @@ public class HeroServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String respAnswer = "";
+        String respAnswer;
         setJsonHeader(resp);
         try {
             String[] path = req.getPathInfo().split("/");
@@ -126,7 +123,7 @@ public class HeroServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String respAnswer = "";
+        String respAnswer;
         try {
             String[] path = req.getPathInfo().split("/");
             if ("delete".equals(path[1])) {

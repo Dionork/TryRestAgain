@@ -1,16 +1,11 @@
 package ru.course.aston.model;
 
-import ru.course.aston.repository.FractionRepository;
-import ru.course.aston.repository.HeroRepository;
-
 import java.util.List;
 
 /** Класс Many to Many
  * Hero to Fraction
  * */
 public class HeroToFraction {
-    private HeroRepository heroRepository;
-    private FractionRepository fractionRepository;
     private List<Fraction> fractions ;
     private List<Hero> heroes ;
     private Long heroToFractionId;

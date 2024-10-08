@@ -2,7 +2,6 @@ package ru.course.aston.repository.impl;
 
 
 import org.junit.jupiter.api.*;
-import org.postgresql.util.PSQLException;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
@@ -50,7 +49,7 @@ class FractionRepositoryImplTest {
     }
 
     @Test
-    public void createFraction() {
+    void createFraction() {
         Fraction fraction = new Fraction(3L, "Fraction");
         Long id = fractionRepository.save(fraction).getFractionId();
         Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(id));
@@ -60,7 +59,7 @@ class FractionRepositoryImplTest {
     }
 
     @Test
-    public void updateFraction() {
+    void updateFraction() {
         Fraction fraction = new Fraction(2L, "Бурда");
         fractionRepository.update(fraction);
         Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(fraction.getFractionId()));
@@ -71,20 +70,20 @@ class FractionRepositoryImplTest {
     }
 
     @Test
-    public void findByIdFraction() {
+    void findByIdFraction() {
         Long id = fractionRepository.findById(2L).getFractionId();
         Assertions.assertEquals(id, fractionRepository.findById(2L).getFractionId());
     }
 
     @Test
-    public void deleteFraction() {
+    void deleteFraction() {
         fractionRepository.deleteById(11L);
         Optional<Fraction> result = Optional.ofNullable(fractionRepository.findById(3L));
         Assertions.assertFalse(result.isPresent());
     }
 
     @Test
-    public void findAllFraction() {
+    void findAllFraction() {
         Assertions.assertEquals(2, fractionRepository.findAll().size());
     }
 

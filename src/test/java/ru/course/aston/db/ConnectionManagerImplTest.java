@@ -3,13 +3,9 @@ package ru.course.aston.db;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.jdbc.JdbcDatabaseDelegate;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import ru.course.aston.repository.FractionRepository;
-import ru.course.aston.repository.impl.FractionRepositoryImpl;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,7 +88,7 @@ class ConnectionManagerImplTest {
     void closeConnection() {
         connectionManager.closeConnection();
         try {
-            assertEquals(false, connectionManager.getConnection().isClosed());
+            assertFalse(connectionManager.getConnection().isClosed());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

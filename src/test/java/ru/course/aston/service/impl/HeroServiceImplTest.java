@@ -1,7 +1,6 @@
 package ru.course.aston.service.impl;
 
 import org.junit.jupiter.api.*;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.ext.ScriptUtils;
 import org.testcontainers.jdbc.JdbcDatabaseDelegate;
@@ -9,11 +8,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
-import ru.course.aston.service.FractionService;
 import ru.course.aston.service.HeroService;
 import ru.course.aston.servlet.dto.HeroDTO;
-
-import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
@@ -44,7 +40,7 @@ class HeroServiceImplTest {
     @Test
     void findById() {
         HeroDTO heroDTO = heroService.findById(1L);
-        assertEquals(heroDTO.getHeroId(), 1L);
+        assertEquals(1L,heroDTO.getHeroId() );
     }
 
     @Test
@@ -69,13 +65,13 @@ class HeroServiceImplTest {
                 2L
         );
         Long id = heroService.save(heroDTO).getHeroId();
-        assertEquals(heroService.findById(1L).getHeroId(), 1L);
+        assertEquals(1L,heroService.findById(1L).getHeroId() );
         heroService.deleteById(id);
     }
 
     @Test
     void findAll() {
-        assertEquals(heroService.findAll().size(), 7);
+        assertEquals(7,heroService.findAll().size() );
     }
 
     @Test
@@ -87,13 +83,13 @@ class HeroServiceImplTest {
                 1L
         );
         heroService.update(heroDTO);
-        assertEquals(heroService.findById(1L).getHeroName(), "Тралл");
+        assertEquals("Тралл",heroService.findById(1L).getHeroName() );
 
     }
     @Test
     void constructor() {
-        HeroService heroService = new HeroServiceImpl();
-        assertNotNull(heroService);
+        HeroService service = new HeroServiceImpl();
+        assertNotNull(service);
     }
 
     @AfterAll

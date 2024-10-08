@@ -13,8 +13,8 @@ import java.util.List;
 
 
 public class MaxHPRepositoryImpl implements MaxHPRepository {
-    private ConnectionManager connectionManager;
-    private HeroRepository heroRepository;
+    private final ConnectionManager connectionManager;
+    private final HeroRepository heroRepository;
     public MaxHPRepositoryImpl() {
         connectionManager = new ConnectionManagerImpl();
         heroRepository = new HeroRepositoryImpl();
@@ -28,7 +28,7 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
     public MaxHP findById(Long id) {
         String sql = "select * from wow_db.heroes_maxhp where heroes_maxhp_id = " + id;
         try (Connection connection = connectionManager.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);) {
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 Hero hero = heroRepository.findById(resultSet.getLong("hero_id"));
@@ -59,7 +59,7 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
     public MaxHP save(MaxHP maxHP) {
         String sql = "insert into wow_db.heroes_maxhp (hero_id, maxhp) values (?, ?)";
         try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, maxHP.getHero().getHeroId());
             statement.setLong(2, maxHP.getMaxHP());
             statement.executeUpdate();
@@ -81,7 +81,7 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
         List<MaxHP> maxHPList = new ArrayList<>();
         String sql = "SELECT* FROM wow_db.heroes_maxhp";
         try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 MaxHP maxHP = new MaxHP(resultSet.getLong("heroes_maxhp_id"),
@@ -99,7 +99,7 @@ public class MaxHPRepositoryImpl implements MaxHPRepository {
     public void update(MaxHP maxHP) {
         String sql = "update wow_db.heroes_maxhp set maxhp = ?, hero_id =? where heroes_maxhp_id = ?";
         try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, maxHP.getMaxHP());
             statement.setLong(2, maxHP.getHero().getHeroId());
             statement.setLong(3, maxHP.getMaxHPId());

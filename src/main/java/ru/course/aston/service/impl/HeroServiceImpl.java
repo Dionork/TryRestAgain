@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeroServiceImpl implements HeroService {
-    private HeroRepository heroRepository;
+    private final HeroRepository heroRepository;
     public HeroServiceImpl() {
         heroRepository = new HeroRepositoryImpl();
     }

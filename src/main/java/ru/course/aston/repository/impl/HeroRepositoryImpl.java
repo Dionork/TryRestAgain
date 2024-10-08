@@ -4,14 +4,13 @@ import ru.course.aston.db.ConnectionManager;
 import ru.course.aston.db.ConnectionManagerImpl;
 import ru.course.aston.model.Hero;
 import ru.course.aston.repository.HeroRepository;
-import ru.course.aston.repository.HeroToFractionRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HeroRepositoryImpl implements HeroRepository {
-    private ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
     public HeroRepositoryImpl(){
     connectionManager = new ConnectionManagerImpl();
     }
@@ -29,14 +28,13 @@ public class HeroRepositoryImpl implements HeroRepository {
              PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Hero hero = new Hero(
+                return new Hero(
                         resultSet.getLong("hero_id"),
                         resultSet.getString("hero_name"),
                         resultSet.getString("hero_lastname"),
                         resultSet.getLong("role_name_id")
 
                 );
-                return hero;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -67,7 +65,7 @@ public class HeroRepositoryImpl implements HeroRepository {
         String sql = "INSERT INTO wow_db.heroes (hero_name, hero_lastname, role_name_id) VALUES (?, ?, ?)";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql,
-                Statement.RETURN_GENERATED_KEYS);) {
+                Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, hero.getHeroName());
             statement.setString(2, hero.getHeroLastName());
             statement.setLong(3, hero.getRoleNameId());

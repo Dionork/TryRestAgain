@@ -14,7 +14,7 @@ import java.util.List;
 
 public class HeroToFractionServiceImpl implements HeroToFractionService {
     ConnectionManager connectionManager;
-    private HeroToFractionRepository heroToFractionRepository;
+    private final HeroToFractionRepository heroToFractionRepository;
     public HeroToFractionServiceImpl() {
         connectionManager = new ConnectionManagerImpl();
         heroToFractionRepository = new HeroToFractionRepositoryImpl();

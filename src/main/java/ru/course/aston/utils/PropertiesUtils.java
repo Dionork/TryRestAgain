@@ -7,7 +7,7 @@ import java.util.Properties;
  * */
 public class PropertiesUtils {
     private static final String PROPERTIES_FILE_NAME = "db.properties";
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     /** Загрузка свойств при запуске
      * */

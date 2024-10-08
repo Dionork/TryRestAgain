@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FractionServiceImpl implements FractionService {
-    private FractionRepository fractionRepository;
+    private final FractionRepository fractionRepository;
     public FractionServiceImpl(){
         fractionRepository = new FractionRepositoryImpl();
     }

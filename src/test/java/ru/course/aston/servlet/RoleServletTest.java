@@ -120,7 +120,7 @@ class RoleServletTest {
     }
     @Test
     void constructor() {
-        RoleServlet roleServlet = new RoleServlet();
-        assertNotNull(roleServlet);
+        RoleServlet servlet = new RoleServlet();
+        assertNotNull(servlet);
     }
 }

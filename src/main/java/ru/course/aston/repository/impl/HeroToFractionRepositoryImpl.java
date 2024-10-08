@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
-    private ConnectionManager connectionManager;
+    private final ConnectionManager connectionManager;
     HeroRepository heroRepository;
     FractionRepository fractionRepository;
     HeroToFraction heroToFraction;
@@ -78,7 +78,7 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
         String sql = "INSERT INTO wow_db.heroes_fractions (hero_id, fraction_id) VALUES (?, ?)";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement =
-                     connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+                     connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, heroToFraction.getHero().getHeroId());
             statement.setLong(2, heroToFraction.getFraction().getFractionId());
             statement.executeUpdate();
@@ -104,13 +104,13 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
 
     @Override
     public List<HeroToFraction> findAll() {
-        List<HeroToFraction> HeroToFractionList = new ArrayList<>();
+        List<HeroToFraction> heroToFractionList = new ArrayList<>();
         String sql = "SELECT * FROM wow_db.heroes_fractions";
         try (Connection connection = connectionManager.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                HeroToFractionList.add(new HeroToFraction(
+                heroToFractionList.add(new HeroToFraction(
                         resultSet.getLong("heroes_fraction_id"),
                         heroRepository.findById(resultSet.getLong("hero_id")),
                         fractionRepository.findById(resultSet.getLong("fraction_id"))
@@ -119,7 +119,7 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return HeroToFractionList;
+        return heroToFractionList;
 
     }
 
@@ -130,7 +130,7 @@ public class HeroToFractionRepositoryImpl implements HeroToFractionRepository {
         }
         String sql = "UPDATE wow_db.heroes_fractions SET hero_id = ?, fraction_id = ? WHERE heroes_fraction_id = ?";
         try (Connection connection = connectionManager.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql);) {
+                PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, models.getHero().getHeroId());
             statement.setLong(2, models.getFraction().getFractionId());
             statement.setLong(3, models.getHeroToFractionId());
